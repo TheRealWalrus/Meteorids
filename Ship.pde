@@ -26,31 +26,37 @@ class Ship {
 
   void update() {
     acceleration.mult(0);
-
-    /*if (keyPressed && (key == CODED)) { // If it’s a coded key
-     if (keyCode == LEFT) { // If it’s the left arrow
-     dir -= 0.1;
-     } else if (keyCode == RIGHT) { // If it’s the right arrow
-     dir += 0.1;
-     } else if (keyCode == UP) {
-     PVector thrust = new PVector(0.05 * cos(dir + 1.5 * PI), 0.05 * sin(dir + 1.5 * PI));
-     applyForce(thrust);
-     }
-     }*/
-
-    //x = constrain(x + v*(int(isRight) - int(isLeft)), r, width  - r);
-
     dir = dir + angVel * (int(isRight) - int(isLeft));
+    
+    if (dir > 2 * PI) {
+      dir -= 2 * PI;
+    } else if (dir < 0) {
+      dir += 2 * PI;
+    }
+
+    
     if (isUp) {
-      PVector thrust = new PVector(0.05 * cos(dir + 1.5 * PI), 0.05 * sin(dir + 1.5 * PI));
+      PVector thrust = new PVector(0.06 * cos(dir + 1.5 * PI), 0.06 * sin(dir + 1.5 * PI));
       applyForce(thrust);
     }
 
     friction();
 
     velocity.add(acceleration);
-    velocity.limit(4);
+    velocity.limit(5);
     location.add(velocity);
+    
+    if (location.x > width + 15) {
+      location.x -= width + 30;
+    } else if (location.x < -15) {
+      location.x += width + 30;
+    }
+    
+    if (location.y > height + 15) {
+      location.y -= height + 30;
+    } else if (location.y < -15) {
+      location.y += height + 30;
+    }
   }
 
   void applyForce(PVector force) {
@@ -58,7 +64,7 @@ class Ship {
   }
 
   void friction() {
-    float fMag = 0.02;
+    float fMag = 0.015;
     PVector force = velocity.copy();
     if (velocity.mag() >= fMag) {
       force.setMag(- fMag);
