@@ -1,15 +1,21 @@
 Ship ship;
+ArrayList<PlayerProjectile> playerProjectiles;
 
 void setup() {
   size(640, 480);
-  ship = new Ship(width / 2, height);
+  ship = new Ship(width / 2, height / 2);
+  playerProjectiles = new ArrayList();
 }
 
 void draw() {
   background(0);
   ship.display();
   ship.update();
-  println(ship.dir);
+  for (playerProjectile part : playerProjectiles) {
+    part.display();
+    part.update();
+  }
+  println(playerProjectiles.size());
 }
 
 void keyPressed() {
