@@ -5,6 +5,7 @@ class Ship {
 
   float dir = 0;
   float angVel = 0.1;
+  float weaponTimer = 0;
 
   boolean isLeft, isRight, isUp, isSpace;
 
@@ -49,10 +50,14 @@ class Ship {
       PVector thrust = new PVector(0.06 * cos(dir + 1.5 * PI), 0.06 * sin(dir + 1.5 * PI));
       applyForce(thrust);
     }
-    
-    if (isSpace) {
+    //SHOOOT
+    if (isSpace && (weaponTimer <= 0)) {
       playerProjectiles.add(new PlayerProjectile(width / 2, height / 2, 0));
-      //println("eddig jó");
+      weaponTimer = 7;
+    }
+    
+    if (weaponTimer > 0) {
+      weaponTimer--;
     }
 
     friction();

@@ -11,11 +11,11 @@ void draw() {
   background(0);
   ship.display();
   ship.update();
-  for (playerProjectile part : playerProjectiles) {
+  for (PlayerProjectile part : playerProjectiles) {
     part.display();
     part.update();
   }
-  println(playerProjectiles.size());
+  //println(ship.weaponTimer);
 }
 
 void keyPressed() {
