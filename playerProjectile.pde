@@ -1,12 +1,13 @@
 class PlayerProjectile {
   PVector location;
   PVector velocity;
+  
+  boolean isFinished = false;
+  float distTraveled = 0;
 
-  PlayerProjectile(float _x, float _y, float _dir) {
-    float speed = 5;
-
-    location = new PVector(_x, _y);
-    velocity = new PVector(speed * cos(_dir + 1.5 * PI), speed * sin(_dir + 1.5 * PI));
+  PlayerProjectile(PVector _location, PVector _velocity) {
+    location = _location.copy();
+    velocity = _velocity.copy();
   }
 
   void display() {
@@ -17,5 +18,9 @@ class PlayerProjectile {
   
   void update() {
     location.add(velocity);
+    distTraveled += velocity.mag();
+    if (distTraveled > 400) {
+      isFinished = true;
+    } 
   }
 }

@@ -52,7 +52,15 @@ class Ship {
     }
     //SHOOOT
     if (isSpace && (weaponTimer <= 0)) {
-      playerProjectiles.add(new PlayerProjectile(width / 2, height / 2, 0));
+      PVector projDir = new PVector(15 * cos(dir + 1.5 * PI), 15 * sin(dir + 1.5 * PI));
+      PVector noseLoc = projDir.copy();
+      noseLoc.add(location);
+      projDir.setMag(5);
+      projDir.add(velocity);
+      if(projDir.mag() < 5) {
+        projDir.setMag(5);
+      }
+      playerProjectiles.add(new PlayerProjectile(noseLoc, projDir));
       weaponTimer = 7;
     }
     
@@ -93,10 +101,6 @@ class Ship {
     }
     applyForce(force);
   }
-
-void shoot() {
-
-}
 
 
   boolean setMove(int k, boolean b) { //"switch" is similar to "else if" structure 
