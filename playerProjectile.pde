@@ -1,7 +1,7 @@
 class PlayerProjectile {
   PVector location;
   PVector velocity;
-  
+
   boolean isFinished = false;
   float distTraveled = 0;
 
@@ -15,12 +15,12 @@ class PlayerProjectile {
     fill(255);
     ellipse(location.x, location.y, 3, 3);
   }
-  
+
   void update() {
     location.add(velocity);
     distTraveled += velocity.mag();
     if (distTraveled > 400) {
       isFinished = true;
-    } 
+    }
   }
 }

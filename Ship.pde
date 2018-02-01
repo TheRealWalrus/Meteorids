@@ -15,7 +15,6 @@ class Ship {
     acceleration = new PVector(0, 0);
   }
   void display() {
-
     pushMatrix();
     translate(location.x, location.y);
     rotate(dir);
@@ -26,11 +25,11 @@ class Ship {
       line(- 5, 10, 0, 20);
       line(5, 10, 0, 20);
     }
+
     stroke(255);
     line(0, - 15, - 10, 15);
     line(0, - 15, 10, 15);
     line(- 8, 10, 8, 10);
-
 
     popMatrix();
   }
@@ -45,11 +44,12 @@ class Ship {
       dir += 2 * PI;
     }
 
-
+    //THRUST
     if (isUp) {
       PVector thrust = new PVector(0.06 * cos(dir + 1.5 * PI), 0.06 * sin(dir + 1.5 * PI));
       applyForce(thrust);
     }
+
     //SHOOOT
     if (isSpace && (weaponTimer <= 0)) {
       PVector projDir = new PVector(15 * cos(dir + 1.5 * PI), 15 * sin(dir + 1.5 * PI));
@@ -57,13 +57,12 @@ class Ship {
       noseLoc.add(location);
       projDir.setMag(5);
       projDir.add(velocity);
-      if(projDir.mag() < 5) {
+      if (projDir.mag() < 5) {
         projDir.setMag(5);
       }
       playerProjectiles.add(new PlayerProjectile(noseLoc, projDir));
       weaponTimer = 7;
     }
-    
     if (weaponTimer > 0) {
       weaponTimer--;
     }
@@ -113,8 +112,8 @@ class Ship {
 
     case RIGHT:
       return isRight = b;
-      
-    case 32:
+
+    case CONTROL:
       return isSpace = b;
 
     default:
