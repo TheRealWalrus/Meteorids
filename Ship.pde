@@ -36,6 +36,8 @@ class Ship {
 
   void update() {
     acceleration.mult(0);
+    
+    //TURNING
     dir = dir + angVel * (int(isRight) - int(isLeft));
 
     if (dir > 2 * PI) {

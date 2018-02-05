@@ -48,5 +48,5 @@ void keyReleased() {
 }
 
 void spawnRock() {
-  asteroids.add(new Asteroid(random(width), random(height), int(random(3)) + 1 ));
+  asteroids.add(new Asteroid(random(width), random(height), int(random(3)) + 1));
 }
