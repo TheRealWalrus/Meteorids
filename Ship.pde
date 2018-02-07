@@ -75,6 +75,7 @@ class Ship {
     velocity.limit(5);
     location.add(velocity);
 
+    //LOOPING SPACE
     if (location.x > width + 15) {
       location.x -= width + 30;
     } else if (location.x < -15) {
@@ -82,9 +83,9 @@ class Ship {
     }
 
     if (location.y > height + 15) {
-      location.y -= height + 30;
-    } else if (location.y < -15) {
-      location.y += height + 30;
+      location.y -= height - hudHeight + 30;
+    } else if (location.y < hudHeight -15) {
+      location.y += height - hudHeight + 30;
     }
   }
 

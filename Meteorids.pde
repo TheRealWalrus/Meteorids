@@ -2,8 +2,10 @@ Ship ship;
 ArrayList<PlayerProjectile> playerProjectiles;
 ArrayList<Asteroid> asteroids;
 
+int hudHeight = 55;
+
 void setup() {
-  size(640, 480);
+  size(853, 480);
   ship = new Ship(width / 2, height / 2);
   playerProjectiles = new ArrayList();
   asteroids = new ArrayList();
@@ -37,6 +39,11 @@ void draw() {
     }
   }
   //println(playerProjectiles.size());
+  
+  //HUD
+  fill(0, 0, 255);
+  noStroke();
+  rect(0, 0, width, hudHeight);
 }
 
 void keyPressed() {

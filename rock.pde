@@ -1,12 +1,13 @@
 class Asteroid {
   PVector location;
   PVector velocity;
-
+  float hypo[];
   float r;
   float theta;
-  int scl = 10;
-  float hypo[];
   float angVel;
+  
+  int scl = 10;
+  float dir = 0;
 
   Asteroid(float _x, float _y, int _type) {
     location = new PVector(_x, _y);
@@ -30,8 +31,13 @@ class Asteroid {
   }
 
   void display() {
+    pushMatrix();
+    translate(location.x, location.y);
+    rotate(dir);
+    
     stroke(255);
     fill(0);
+
     beginShape();
     int j = 0;
     for (float i = 0; i < 2 * PI; i += theta) {
@@ -41,26 +47,35 @@ class Asteroid {
       j++;
     }    
     endShape(CLOSE);
-  
+
     //SHOW HITBOX
-    /*stroke(255, 0, 0);
+    stroke(255, 0, 0);
     noFill();
-    ellipse(location.x, location.y, r * 2, r * 2);*/
+    ellipse(location.x, location.y, r * 2, r * 2);
+    popMatrix();
   }
 
   void update() {
     location.add(velocity);
+    
+    dir += angVel;
+    /*if (dir > 2 * PI) {
+      dir -= 2 * PI;
+    } else if (dir < 0) {
+      dir += 2 * PI;
+    }*/
 
-    if (location.x > width + 2 * r) {
-      location.x -= width + 4 * r;
-    } else if (location.x < -2 * r) {
-      location.x += width + 4 * r;
+    //LOOPING SPACE
+    if (location.x > width + r) {
+      location.x -= width + 2 * r;
+    } else if (location.x < -1 * r) {
+      location.x += width + 2 * r;
     }
 
-    if (location.y > height + 2 * r) {
-      location.y -= height + 4 * r;
-    } else if (location.y < -2 * r) {
-      location.y += height + 4 * r;
+    if (location.y > height + r) {
+      location.y -= height - hudHeight + 2 * r;
+    } else if (location.y < hudHeight -1 * r) {
+      location.y += height - hudHeight + 2 * r;
     }
   }
 }
