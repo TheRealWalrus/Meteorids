@@ -13,7 +13,7 @@ class Asteroid {
     location = new PVector(_x, _y);
     velocity = PVector.fromAngle(random(2 * PI));
     velocity.mult(random(1.5) + 1.5);
-    angVel = random(0.2, 0.5);
+    angVel = random(-0.02, 0.02);
 
     if (_type == 1) {
       r = 40;
@@ -43,7 +43,7 @@ class Asteroid {
     for (float i = 0; i < 2 * PI; i += theta) {
       float x = hypo[j] * cos(i);
       float y = hypo[j] * sin(i);
-      vertex(x + location.x, y + location.y);
+      vertex(x + 0, y + 0);
       j++;
     }    
     endShape(CLOSE);
@@ -51,7 +51,7 @@ class Asteroid {
     //SHOW HITBOX
     stroke(255, 0, 0);
     noFill();
-    ellipse(location.x, location.y, r * 2, r * 2);
+    //ellipse(0, 0, r * 2, r * 2);
     popMatrix();
   }
 
@@ -59,11 +59,11 @@ class Asteroid {
     location.add(velocity);
     
     dir += angVel;
-    /*if (dir > 2 * PI) {
+    if (dir > 2 * PI) {
       dir -= 2 * PI;
     } else if (dir < 0) {
       dir += 2 * PI;
-    }*/
+    }
 
     //LOOPING SPACE
     if (location.x > width + r) {
