@@ -5,7 +5,7 @@ class Ship {
 
   float dir = 0;
   float angVel = 0.1;
-  float weaponTimer = 0;
+  int weaponTimer = 0;
 
   boolean isLeft, isRight, isUp, isSpace;
 
@@ -53,21 +53,22 @@ class Ship {
     }
 
     //SHOOOT
-    if (isSpace && (weaponTimer <= 0)) {
+    if (isSpace && (millis() - weaponTimer > 200)) {
       PVector projDir = new PVector(15 * cos(dir + 1.5 * PI), 15 * sin(dir + 1.5 * PI));
       PVector noseLoc = projDir.copy();
       noseLoc.add(location);
-      projDir.setMag(5);
+      projDir.setMag(7);
       projDir.add(velocity);
-      if (projDir.mag() < 5) {
+      if (projDir.mag() < 7) {
         projDir.setMag(5);
       }
       playerProjectiles.add(new PlayerProjectile(noseLoc, projDir));
-      weaponTimer = 7;
+      //weaponTimer = 7;
+      weaponTimer = millis();
     }
-    if (weaponTimer > 0) {
+    /*if (weaponTimer > 0) {
       weaponTimer--;
-    }
+    }*/
 
     friction();
 
