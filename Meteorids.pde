@@ -44,7 +44,7 @@ void draw() {
       playerProjectiles.remove(i);
     }
   }
-  //println(playerProjectiles.size());
+  //println(ship.heat);
   
   //HUD
   fill(100);
@@ -67,6 +67,11 @@ void draw() {
   
   stroke(255, 255, 0);
   rect(width / 2 + 5, hudHeight / 2, width / 2 - 10, hudHeight / 2 - 5);
+  
+  noStroke();
+  fill(0, 255, 255);
+  rect(5, hudHeight / 2, map(ship.heat, 0, 100, 0, width/2 - 5), hudHeight / 2 - 5);
+  
 }
 
 void keyPressed() {

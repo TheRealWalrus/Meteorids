@@ -3,6 +3,7 @@ class Ship {
   PVector velocity;
   PVector acceleration;
 
+  float heat = 0;
   float dir = 0;
   float angVel = 0.1;
   int weaponTimer = 0;
@@ -36,7 +37,7 @@ class Ship {
 
   void update() {
     acceleration.mult(0);
-    
+
     //TURNING
     dir = dir + angVel * (int(isRight) - int(isLeft));
 
@@ -65,10 +66,11 @@ class Ship {
       playerProjectiles.add(new PlayerProjectile(noseLoc, projDir));
       //weaponTimer = 7;
       weaponTimer = millis();
+      heat += 20;
     }
-    /*if (weaponTimer > 0) {
-      weaponTimer--;
-    }*/
+
+    heat -= 1;
+    heat = constrain(heat, 0, 100);
 
     friction();
 
