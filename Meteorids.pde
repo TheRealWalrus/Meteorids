@@ -30,9 +30,12 @@ void draw() {
   ship.display();
   ship.update();
 
-  for (PlayerProjectile part : playerProjectiles) {
-    part.display();
-    part.update();
+  for (PlayerProjectile bullet : playerProjectiles) {
+    bullet.display();
+    bullet.update();
+    //for (Asteroid partj : asteroids) {
+      
+    //}
   }
 
   for (Asteroid part : asteroids) {
