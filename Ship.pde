@@ -7,6 +7,8 @@ class Ship {
   float dir = 0;
   float angVel = 0.1;
   int weaponTimer = 0;
+  boolean overheat = false;
+  float cooldown = 1;
 
   boolean isLeft, isRight, isUp, isSpace;
 
@@ -54,7 +56,7 @@ class Ship {
     }
 
     //SHOOOT
-    if (isSpace && (millis() - weaponTimer > 200)) {
+    if (isSpace && (millis() - weaponTimer > 200) && !overheat) {
       PVector projDir = new PVector(15 * cos(dir + 1.5 * PI), 15 * sin(dir + 1.5 * PI));
       PVector noseLoc = projDir.copy();
       noseLoc.add(location);
@@ -69,8 +71,20 @@ class Ship {
       heat += 20;
     }
 
-    heat -= 1;
+    heat -= cooldown;
     heat = constrain(heat, 0, 100);
+
+    if (heat == 100) {
+      overheat = true;
+    } else if (heat == 0) {
+      overheat = false;
+    }
+
+    if (!overheat) {
+      cooldown = 1;
+    } else {
+      cooldown = 0.75;
+    }
 
     friction();
 
@@ -106,7 +120,6 @@ class Ship {
     }
     applyForce(force);
   }
-
 
   boolean setMove(int k, boolean b) { //"switch" is similar to "else if" structure 
     switch (k) {
