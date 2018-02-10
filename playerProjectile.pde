@@ -36,4 +36,13 @@ class PlayerProjectile {
       location.y = height;
     }
   }
+  
+  boolean hits(Asteroid target) {
+    float d = dist(location.x, location.y, target.location.x, target.location.y);
+    if (d <= target.r) {
+      return(true);
+    } else {
+      return(false);
+    }
+  }
 }

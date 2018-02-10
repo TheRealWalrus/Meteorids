@@ -4,7 +4,8 @@ ArrayList<PlayerProjectile> playerProjectiles;
 ArrayList<Asteroid> asteroids;
 
 int hudHeight = 55;
-
+int score = 0;
+int level = 1;
 PFont fontMain;
 
 void setup() {
@@ -33,23 +34,50 @@ void draw() {
   for (PlayerProjectile bullet : playerProjectiles) {
     bullet.display();
     bullet.update();
-    //for (Asteroid partj : asteroids) {
-      
+    //for (Asteroid target : asteroids) {
+    //  if (bullet.hits(target)) {
+    //    score += target.scoreValue;
+    //    if (target.type < 3) {
+    //      asteroids.add(new Asteroid(target.location.x, target.location.y, target.type + 1));
+    //    }
+    //    target.isFinished = true;
+    //    bullet.isFinished = true;
+    //  }
     //}
+    for (int j = 0; j < asteroids.size(); j++) {
+      Asteroid target = asteroids.get(j);
+      if (bullet.hits(target)) {
+        score += target.scoreValue;
+        if (target.type < 3) {
+          asteroids.add(new Asteroid(target.location.x, target.location.y, target.type + 1));
+          asteroids.add(new Asteroid(target.location.x, target.location.y, target.type + 1));
+        }
+        target.isFinished = true;
+        bullet.isFinished = true;
+      }
+    }
   }
 
   for (Asteroid part : asteroids) {
     part.display();
     part.update();
   }
+  hud.drawHud();
 
+  //REMOVE LOOPS
   for (int i = playerProjectiles.size() - 1; i >= 0; i--) {
     PlayerProjectile part = playerProjectiles.get(i);
     if (part.isFinished) {
       playerProjectiles.remove(i);
     }
   }
-  hud.drawHud();
+
+  for (int i = asteroids.size() - 1; i >= 0; i--) {
+    Asteroid part = asteroids.get(i);
+    if (part.isFinished) {
+      asteroids.remove(i);
+    }
+  }
 }
 
 void keyPressed() {
@@ -61,5 +89,5 @@ void keyReleased() {
 }
 
 void spawnRock() {
-  asteroids.add(new Asteroid(random(width), random(height), int(random(3)) + 1));
+  asteroids.add(new Asteroid(random(width), random(height), 1));
 }

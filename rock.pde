@@ -5,22 +5,28 @@ class Asteroid {
   float r;
   float theta;
   float angVel;
-  
+  boolean isFinished = false;
   int scl = 10;
   float dir = 0;
+  int scoreValue;
+  int type;
 
   Asteroid(float _x, float _y, int _type) {
     location = new PVector(_x, _y);
     velocity = PVector.fromAngle(random(2 * PI));
     velocity.mult(random(1.5) + 1.5);
     angVel = random(-0.02, 0.02);
+    type = _type;
 
     if (_type == 1) {
       r = 40;
+      scoreValue = 30;
     } else if (_type == 2) {
       r = 20;
+      scoreValue = 50;
     } else {
       r = 10;
+      scoreValue = 100;
     }
 
     theta = 2 * PI / scl;
