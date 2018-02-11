@@ -1,3 +1,5 @@
+//ALPHA: rewriting ship geometry 
+
 class Hud {
   float lightness;
   int incrementLight;

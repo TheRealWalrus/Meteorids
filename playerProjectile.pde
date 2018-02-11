@@ -4,9 +4,14 @@ class PlayerProjectile {
   boolean isFinished = false;
   int timer;
 
-  PlayerProjectile(PVector _location, PVector _velocity) {
+  PlayerProjectile(PVector _location, PVector _shipVel, float _dir) {
     location = _location.copy();
-    velocity = _velocity.copy();
+    velocity = PVector.fromAngle(_dir);
+    velocity.mult(7);
+    velocity.add(_shipVel);
+    if (velocity.mag() < 7) {
+      velocity.setMag(7);
+    }
     timer = millis();
   }
 
