@@ -1,5 +1,3 @@
-//ALPHA: rewriting ship geometry 
-
 class Hud {
   float lightness;
   int incrementLight;
@@ -28,13 +26,6 @@ class Hud {
     if (!ship.overheat) {
       lightness = 0;
     } else {
-      //lightness += incrementLight;
-
-      //if (lightness > 255) {
-      //  incrementLight = abs(incrementLight) * -1;
-      //} else if (lightness < 0) {
-      //  incrementLight = abs(incrementLight);
-      //}
       lightness = 255;
     }
 
@@ -49,7 +40,7 @@ class Hud {
     noStroke();
     fill(lightness, 255, 255);
     rect(5, hudHeight / 2, map(ship.heat, 0, 100, 0, width/2 - 5), hudHeight / 2 - 5);
-    
+
     //PLAYER 2 HEAT BAR AS WELL
     //fill(255, 255, 0);
     //rect(width / 2 + 5, hudHeight / 2, 300, hudHeight / 2 - 5);

@@ -14,7 +14,7 @@ class Asteroid {
   Asteroid(float _x, float _y, int _type) {
     location = new PVector(_x, _y);
     velocity = PVector.fromAngle(random(2 * PI));
-    velocity.mult(random(1.5) + 1.5);
+    velocity.mult(random(1, 2));
     angVel = random(-0.02, 0.02);
     type = _type;
 
@@ -40,7 +40,7 @@ class Asteroid {
     pushMatrix();
     translate(location.x, location.y);
     rotate(dir);
-    
+
     stroke(255);
     fill(0);
 
@@ -63,7 +63,7 @@ class Asteroid {
 
   void update() {
     location.add(velocity);
-    
+
     dir += angVel;
     if (dir > 2 * PI) {
       dir -= 2 * PI;

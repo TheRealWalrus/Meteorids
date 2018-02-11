@@ -25,19 +25,13 @@ class Ship {
     //Afterburner
     if (isUp) {
       stroke(int(random(2)) * 255);
-      //line(- 5, 10, 0, 20);
-      //line(5, 10, 0, 20);
-      
+
       line(-10, -5, -20, 0);
       line(-10, 5, -20, 0);
     }
 
     fill(0);
     stroke(255);
-    //line(0, - 15, - 10, 15);
-    //line(0, - 15, 10, 15);
-    //line(- 8, 10, 8, 10);
-
     beginShape();
     vertex(15, 0);
     vertex(-15, -10);
@@ -69,18 +63,10 @@ class Ship {
 
     //SHOOOT
     if (isSpace && (millis() - weaponTimer > 200) && !overheat) {
-      //PVector projDir = new PVector(15 * cos(dir), 15 * sin(dir));
-      //PVector noseLoc = projDir.copy();
-      //noseLoc.add(location);
-      //projDir.setMag(7);
-      //projDir.add(velocity);
-      //if (projDir.mag() < 7) {
-      //  projDir.setMag(5);
-      //}
       PVector noseLoc = PVector.fromAngle(dir);
       noseLoc.setMag(15);
       noseLoc.add(location);
-      
+
       playerProjectiles.add(new PlayerProjectile(noseLoc, velocity, dir));
       weaponTimer = millis();
       heat += 20;
@@ -136,7 +122,7 @@ class Ship {
     applyForce(force);
   }
 
-  boolean setMove(int k, boolean b) { //"switch" is similar to "else if" structure 
+  boolean setMove(int k, boolean b) { //"switch" is similar to the "else if" structure 
     switch (k) {
     case UP:
       return isUp = b;
@@ -152,6 +138,60 @@ class Ship {
 
     default:
       return b;
+    }
+  }
+}
+
+class PlayerProjectile {
+  PVector location;
+  PVector velocity;
+  boolean isFinished = false;
+  int timer;
+
+  PlayerProjectile(PVector _location, PVector _shipVel, float _dir) {
+    location = _location.copy();
+    velocity = PVector.fromAngle(_dir);
+    velocity.mult(7);
+    velocity.add(_shipVel);
+    if (velocity.mag() < 7) {
+      velocity.setMag(7);
+    }
+    timer = millis();
+  }
+
+  void display() {
+    noStroke();
+    fill(255);
+    ellipse(location.x, location.y, 2, 2);
+  }
+
+  void update() {
+    location.add(velocity);
+
+    if (millis() - timer > 700) {
+      isFinished = true;
+    }
+
+    //LOOPING SPACE
+    if (location.x > width) {
+      location.x = 0;
+    } else if (location.x < 0) {
+      location.x = width;
+    }
+
+    if (location.y > height) {
+      location.y = hudHeight;
+    } else if (location.y < hudHeight) {
+      location.y = height;
+    }
+  }
+
+  boolean hits(Asteroid target) {
+    float d = dist(location.x, location.y, target.location.x, target.location.y);
+    if (d <= target.r) {
+      return(true);
+    } else {
+      return(false);
     }
   }
 }

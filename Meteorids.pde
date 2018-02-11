@@ -2,10 +2,11 @@ Ship ship;
 Hud hud;
 ArrayList<PlayerProjectile> playerProjectiles;
 ArrayList<Asteroid> asteroids;
+ArrayList<Partickle> partickles;
 
 int hudHeight = 55;
 int score = 0;
-int level = 1;
+int level = 0;
 PFont fontMain;
 
 void setup() {
@@ -18,12 +19,7 @@ void setup() {
   hud = new Hud();
   playerProjectiles = new ArrayList();
   asteroids = new ArrayList();
-
-  spawnRock();
-  spawnRock();
-  spawnRock();
-  spawnRock();
-  spawnRock();
+  partickles = new ArrayList();
 }
 
 void draw() {
@@ -31,19 +27,9 @@ void draw() {
   ship.display();
   ship.update();
 
-  for (PlayerProjectile bullet : playerProjectiles) {
+  for (PlayerProjectile bullet : playerProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
     bullet.display();
     bullet.update();
-    //for (Asteroid target : asteroids) {
-    //  if (bullet.hits(target)) {
-    //    score += target.scoreValue;
-    //    if (target.type < 3) {
-    //      asteroids.add(new Asteroid(target.location.x, target.location.y, target.type + 1));
-    //    }
-    //    target.isFinished = true;
-    //    bullet.isFinished = true;
-    //  }
-    //}
     for (int j = 0; j < asteroids.size(); j++) {
       Asteroid target = asteroids.get(j);
       if (bullet.hits(target)) {
@@ -54,11 +40,20 @@ void draw() {
         }
         target.isFinished = true;
         bullet.isFinished = true;
+        for (int k = 0; k < int(random(4, 8)); k++) {
+          partickles.add(new Partickle(target.location, target.type));
+        }
+        //explosion(target.location, target.type);
       }
     }
   }
 
   for (Asteroid part : asteroids) {
+    part.display();
+    part.update();
+  }
+
+  for (Partickle part : partickles) {
     part.display();
     part.update();
   }
@@ -78,6 +73,14 @@ void draw() {
       asteroids.remove(i);
     }
   }
+
+  for (int i = partickles.size() - 1; i >= 0; i--) {
+    Partickle part = partickles.get(i);
+    if (part.isFinished) {
+      partickles.remove(i);
+    }
+  }
+  checkNextLevel();
 }
 
 void keyPressed() {
@@ -88,6 +91,15 @@ void keyReleased() {
   ship.setMove(keyCode, false);
 }
 
-void spawnRock() {
-  asteroids.add(new Asteroid(random(width), random(height), 1));
+void checkNextLevel() {
+  if (asteroids.size() == 0) {
+    for (int i = 0; i < level + 4; i++) {
+      asteroids.add(new Asteroid(random(width), random(height), 1));
+    }
+    level++;
+  }
 }
+
+//void explosion(_location, _type) {
+
+//}
