@@ -8,7 +8,7 @@ class Partickle {
   Partickle(PVector _location, int _type) {
     location = _location.copy();
     velocity = PVector.fromAngle(random(2 * PI));
-    velocity.mult(3);
+    velocity.mult(random(1, 3));
     timer = millis();
     
     if (_type == 1) {

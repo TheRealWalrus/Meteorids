@@ -24,14 +24,15 @@ class Ship {
 
     //Afterburner
     if (isUp) {
-      stroke(int(random(2)) * 255);
+      int afterColor = int(random(2)) * 255;
+      stroke(0, afterColor, afterColor);
 
       line(-10, -5, -20, 0);
       line(-10, 5, -20, 0);
     }
 
     fill(0);
-    stroke(255);
+    stroke(0, 255, 255);
     beginShape();
     vertex(15, 0);
     vertex(-15, -10);
@@ -161,7 +162,7 @@ class PlayerProjectile {
 
   void display() {
     noStroke();
-    fill(255);
+    fill(0, 255, 255);
     ellipse(location.x, location.y, 2, 2);
   }
 

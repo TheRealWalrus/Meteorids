@@ -40,10 +40,7 @@ void draw() {
         }
         target.isFinished = true;
         bullet.isFinished = true;
-        for (int k = 0; k < int(random(4, 8)); k++) {
-          partickles.add(new Partickle(target.location, target.type));
-        }
-        //explosion(target.location, target.type);
+        explosion(target.location, target.type);
       }
     }
   }
@@ -100,6 +97,22 @@ void checkNextLevel() {
   }
 }
 
-//void explosion(_location, _type) {
+void explosion(PVector _location,int _type) {
+  int minPartickles;
+  int maxPartickles;
 
-//}
+  if (_type == 1) {
+    minPartickles = 5;
+    maxPartickles = 8;
+  } else if (_type == 2) {
+    minPartickles = 4;
+    maxPartickles = 6;
+  } else {
+    minPartickles = 3;
+    maxPartickles = 5;
+  }
+
+  for (int k = 0; k < int(random(minPartickles, maxPartickles + 1)); k++) {
+    partickles.add(new Partickle(_location, _type));
+  }
+}
