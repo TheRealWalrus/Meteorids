@@ -2,11 +2,13 @@ class Ship {
   PVector location;
   PVector velocity;
   PVector acceleration;
+  
+  PVector nose, mid1, mid2, tail1, tail2;
 
-  float heat = 0;
   float dir = 1.5 * PI;
   float angVel = 0.1;
   int weaponTimer = 0;
+  float heat = 0;
   boolean overheat = false;
   float cooldown = 1;
 
@@ -16,32 +18,34 @@ class Ship {
     location = new PVector(_x, _y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
+    
+    nose = new PVector(15, 0);
+    tail1 = new PVector(-15, -10);
+    mid1 = new PVector(-10, -8);
+    mid2 = new PVector(-10, 8);
+    tail2 = new PVector(-15, 10);
   }
   void display() {
-    pushMatrix();
-    translate(location.x, location.y);
-    rotate(dir);
 
     //Afterburner
-    if (isUp) {
-      int afterColor = int(random(2)) * 255;
-      stroke(0, afterColor, afterColor);
+    //if (isUp) {
+    //  int afterColor = int(random(2)) * 255;
+    //  stroke(0, afterColor, afterColor);
 
-      line(-10, -5, -20, 0);
-      line(-10, 5, -20, 0);
-    }
+    //  line(-10, -5, -20, 0);
+    //  line(-10, 5, -20, 0);
+    //}
 
     fill(0);
     stroke(0, 255, 255);
     beginShape();
-    vertex(15, 0);
-    vertex(-15, -10);
-    vertex(-10, -8);
-    vertex(-10, 8);
-    vertex(-15, 10);
+    drawShip(nose);
+    drawShip(tail1);
+    drawShip(mid1);
+    drawShip(mid2);
+    drawShip(tail2);
     endShape(CLOSE);
 
-    popMatrix();
   }
 
   void update() {
@@ -140,6 +144,10 @@ class Ship {
     default:
       return b;
     }
+  }
+  
+  void drawShip(PVector vector) {
+    vertex(vector.x + location.x, vector.y + location.y);
   }
 }
 

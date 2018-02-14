@@ -1,3 +1,8 @@
+//ALPHA
+//TO DO:
+//rewrite spaceship draw without transformations
+//implement line-circle col detection 
+
 Ship ship;
 Hud hud;
 ArrayList<PlayerProjectile> playerProjectiles;
