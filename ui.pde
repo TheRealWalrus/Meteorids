@@ -23,26 +23,28 @@ class Hud {
     textSize(20);
     text("SCORE: " + score, width - 165, 20);
 
-    if (!ship.overheat) {
-      lightness = 0;
-    } else {
-      lightness = 255;
-    }
-
-    stroke(lightness, 255, 255);
     noFill();
+    if (!ship.overheat) {
+      stroke(ship.playerColor);
+    } else {
+      stroke(255);
+    }
     rect(5, hudHeight / 2, width/2 - 5, hudHeight / 2 - 5);
 
-    //PLAYER 2 HEAT BAR
-    //stroke(255, 255, 0);
-    //rect(width / 2 + 5, hudHeight / 2, width / 2 - 10, hudHeight / 2 - 5);
 
     noStroke();
-    fill(lightness, 255, 255);
+    if (!ship.overheat) {
+      fill(ship.playerColor);
+    } else {
+      fill(255);
+    }
     rect(5, hudHeight / 2, map(ship.heat, 0, 100, 0, width/2 - 5), hudHeight / 2 - 5);
 
-    //PLAYER 2 HEAT BAR AS WELL
+    //PLAYER 2 HEAT BAR
     //fill(255, 255, 0);
     //rect(width / 2 + 5, hudHeight / 2, 300, hudHeight / 2 - 5);
+
+    //stroke(255, 255, 0);
+    //rect(width / 2 + 5, hudHeight / 2, width / 2 - 10, hudHeight / 2 - 5);
   }
 }

@@ -2,15 +2,15 @@ class Ship {
   PVector location;
   PVector velocity;
   PVector acceleration;
-  
-  PVector nose, mid1, mid2, tail1, tail2;
 
-  float dir = 1.5 * PI;
+  PVector nose, mid1, mid2, tail1, tail2, flameBase1, flameBase2, flameTip;
+
   float angVel = 0.1;
   int weaponTimer = 0;
   float heat = 0;
   boolean overheat = false;
   float cooldown = 1;
+  color playerColor;
 
   boolean isLeft, isRight, isUp, isSpace;
 
@@ -18,26 +18,39 @@ class Ship {
     location = new PVector(_x, _y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
-    
+
     nose = new PVector(15, 0);
     tail1 = new PVector(-15, -10);
     mid1 = new PVector(-10, -8);
     mid2 = new PVector(-10, 8);
     tail2 = new PVector(-15, 10);
+    flameBase1 = new PVector(-10, -5);
+    flameBase2 = new PVector(-10, 5);
+    flameTip = new PVector(-20, 0);
+
+    //playerColor = color(255, 200, 0);
+    playerColor = color(0, 255, 255);
   }
   void display() {
-
+    noFill();
     //Afterburner
-    //if (isUp) {
-    //  int afterColor = int(random(2)) * 255;
-    //  stroke(0, afterColor, afterColor);
-
-    //  line(-10, -5, -20, 0);
-    //  line(-10, 5, -20, 0);
-    //}
+    if (isUp) {
+      if (int(random(2)) == 1) {
+        stroke(playerColor);
+      } else {
+        noStroke();
+      }
+      beginShape();
+      drawShip(flameBase1);
+      drawShip(flameBase2);
+      drawShip(flameTip);
+      endShape(CLOSE);
+      //line(-10, -5, -20, 0);
+      //line(-10, 5, -20, 0);
+    }
 
     fill(0);
-    stroke(0, 255, 255);
+    stroke(playerColor);
     beginShape();
     drawShip(nose);
     drawShip(tail1);
@@ -45,34 +58,33 @@ class Ship {
     drawShip(mid2);
     drawShip(tail2);
     endShape(CLOSE);
-
   }
 
   void update() {
     acceleration.mult(0);
 
     //TURNING
-    dir = dir + angVel * (int(isRight) - int(isLeft));
-
-    if (dir > 2 * PI) {
-      dir -= 2 * PI;
-    } else if (dir < 0) {
-      dir += 2 * PI;
-    }
+    rotateVertex(nose);
+    rotateVertex(tail1);
+    rotateVertex(mid1);
+    rotateVertex(mid2);
+    rotateVertex(tail2);
+    rotateVertex(flameBase1);
+    rotateVertex(flameBase2);
+    rotateVertex(flameTip);
 
     //THRUST
     if (isUp) {
-      PVector thrust = new PVector(0.06 * cos(dir), 0.06 * sin(dir));
+      //PVector thrust = new PVector(0.06 * cos(dir), 0.06 * sin(dir));
+      PVector thrust = nose.copy();
+      thrust.setMag(0.06);
       applyForce(thrust);
     }
 
     //SHOOOT
     if (isSpace && (millis() - weaponTimer > 200) && !overheat) {
-      PVector noseLoc = PVector.fromAngle(dir);
-      noseLoc.setMag(15);
-      noseLoc.add(location);
-
-      playerProjectiles.add(new PlayerProjectile(noseLoc, velocity, dir));
+      PVector origo = PVector.add(location, nose);
+      playerProjectiles.add(new PlayerProjectile(origo, velocity, nose));
       weaponTimer = millis();
       heat += 20;
     }
@@ -145,9 +157,13 @@ class Ship {
       return b;
     }
   }
-  
+
   void drawShip(PVector vector) {
     vertex(vector.x + location.x, vector.y + location.y);
+  }
+
+  void rotateVertex(PVector vector) {
+    vector.rotate(angVel * (int(isRight) - int(isLeft)));
   }
 }
 
@@ -157,10 +173,10 @@ class PlayerProjectile {
   boolean isFinished = false;
   int timer;
 
-  PlayerProjectile(PVector _location, PVector _shipVel, float _dir) {
+  PlayerProjectile(PVector _location, PVector _shipVel, PVector _dir) {
     location = _location.copy();
-    velocity = PVector.fromAngle(_dir);
-    velocity.mult(7);
+    velocity = _dir.copy();
+    velocity.setMag(7);
     velocity.add(_shipVel);
     if (velocity.mag() < 7) {
       velocity.setMag(7);
@@ -170,7 +186,7 @@ class PlayerProjectile {
 
   void display() {
     noStroke();
-    fill(0, 255, 255);
+    fill(ship.playerColor);
     ellipse(location.x, location.y, 2, 2);
   }
 
