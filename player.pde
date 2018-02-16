@@ -11,6 +11,7 @@ class Ship {
   boolean overheat = false;
   float cooldown = 1;
   color playerColor;
+  float invTimer;
 
   boolean isLeft, isRight, isUp, isSpace;
 
@@ -45,8 +46,6 @@ class Ship {
       drawShip(flameBase2);
       drawShip(flameTip);
       endShape(CLOSE);
-      //line(-10, -5, -20, 0);
-      //line(-10, 5, -20, 0);
     }
 
     fill(0);
@@ -75,7 +74,6 @@ class Ship {
 
     //THRUST
     if (isUp) {
-      //PVector thrust = new PVector(0.06 * cos(dir), 0.06 * sin(dir));
       PVector thrust = nose.copy();
       thrust.setMag(0.06);
       applyForce(thrust);
@@ -212,11 +210,6 @@ class PlayerProjectile {
   }
 
   boolean hits(Asteroid target) {
-    float d = dist(location.x, location.y, target.location.x, target.location.y);
-    if (d <= target.r) {
-      return(true);
-    } else {
-      return(false);
-    }
+    return(pointCircle(location, target.location, target.r));
   }
 }

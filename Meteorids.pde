@@ -1,5 +1,10 @@
 //TO DO:
-//implement line-circle col detection 
+//improve col detection
+//add alien ships
+//multiplayer
+//main menu
+
+int testCollision = 0;
 
 Ship ship;
 Hud hud;
@@ -51,6 +56,17 @@ void draw() {
   for (Asteroid part : asteroids) {
     part.display();
     part.update();
+    //SHIP COLLISION
+    PVector noseLoc = PVector.add(ship.nose, ship.location);
+    PVector tail1Loc = PVector.add(ship.tail1, ship.location);
+    PVector tail2Loc = PVector.add(ship.tail2, ship.location);
+    if (lineCircle(noseLoc, tail1Loc, part.location, part.r) || lineCircle(noseLoc, tail2Loc, part.location, part.r)) {
+      ship.playerColor = color(255, 0, 0);
+      testCollision++;
+      println(testCollision);
+    } else {
+      ship.playerColor = color(0, 255, 255);
+    }
   }
 
   for (Partickle part : partickles) {
@@ -100,7 +116,7 @@ void checkNextLevel() {
   }
 }
 
-void explosion(PVector _location,int _type) {
+void explosion(PVector _location, int _type) {
   int minPartickles;
   int maxPartickles;
 
@@ -117,5 +133,41 @@ void explosion(PVector _location,int _type) {
 
   for (int k = 0; k < int(random(minPartickles, maxPartickles + 1)); k++) {
     partickles.add(new Partickle(_location, _type));
+  }
+}
+
+class Partickle {
+  PVector location;
+  PVector velocity;
+  int duration;
+  int timer;
+  boolean isFinished = false;
+
+  Partickle(PVector _location, int _type) {
+    location = _location.copy();
+    velocity = PVector.fromAngle(random(2 * PI));
+    velocity.mult(random(1, 3));
+    timer = millis();
+
+    if (_type == 1) {
+      duration = 500;
+    } else if (_type == 2) {
+      duration = 300;
+    } else if (_type == 3) {
+      duration = 150;
+    }
+  }
+
+  void display() {
+    noStroke();
+    fill(255);
+    ellipse(location.x, location.y, 2, 2);
+  }
+
+  void update() {
+    location.add(velocity);
+    if (millis() > timer + duration) {
+      isFinished = true;
+    }
   }
 }
