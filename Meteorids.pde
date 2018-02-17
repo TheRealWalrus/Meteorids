@@ -4,7 +4,7 @@
 //multiplayer
 //main menu
 
-int testCollision = 0;
+//int testCollision = 0;
 
 Ship ship;
 Hud hud;
@@ -13,9 +13,11 @@ ArrayList<Asteroid> asteroids;
 ArrayList<Partickle> partickles;
 
 int hudHeight = 55;
-int score = 0;
+int lives = 666;
 int level = 0;
+int score = 0;
 PFont fontMain;
+int astSizeLimit = 40;
 
 void setup() {
   size(853, 480);
@@ -61,11 +63,11 @@ void draw() {
     PVector tail1Loc = PVector.add(ship.tail1, ship.location);
     PVector tail2Loc = PVector.add(ship.tail2, ship.location);
     if (lineCircle(noseLoc, tail1Loc, part.location, part.r) || lineCircle(noseLoc, tail2Loc, part.location, part.r)) {
-      ship.playerColor = color(255, 0, 0);
-      testCollision++;
-      println(testCollision);
-    } else {
-      ship.playerColor = color(0, 255, 255);
+      if (!ship.invincible) {
+        lives--;
+        ship.invincible = true;
+        ship.invTimer = millis();
+      }
     }
   }
 
@@ -101,6 +103,13 @@ void draw() {
 
 void keyPressed() {
   ship.setMove(keyCode, true);
+
+  //NEXT LEVEL CHEAT
+  if (keyCode == 67) { // "C" KEY
+    for (int i = asteroids.size() - 1; i >= 0; i--) {
+      asteroids.remove(i);
+    }
+  }
 }
 
 void keyReleased() {
@@ -110,7 +119,17 @@ void keyReleased() {
 void checkNextLevel() {
   if (asteroids.size() == 0) {
     for (int i = 0; i < level + 4; i++) {
-      asteroids.add(new Asteroid(random(width), random(height), 1));
+      float spawnX;
+      float spawnY;
+      int spawnAxis = int(random(2));
+      if (spawnAxis == 1) {
+        spawnX = random(-astSizeLimit, width + astSizeLimit);
+        spawnY = height + astSizeLimit;
+      } else {
+        spawnX = width + astSizeLimit;
+        spawnY = random(-astSizeLimit, height + astSizeLimit);
+      }
+      asteroids.add(new Asteroid(spawnX, spawnY, 1));
     }
     level++;
   }

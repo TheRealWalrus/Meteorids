@@ -19,7 +19,7 @@ class Asteroid {
     type = _type;
 
     if (_type == 1) {
-      r = 40;
+      r = astSizeLimit;
       scoreValue = 30;
     } else if (_type == 2) {
       r = 20;
@@ -71,7 +71,7 @@ class Asteroid {
       dir += 2 * PI;
     }
 
-    //LOOPING SPACE
+    //BEND SPACE
     if (location.x > width + r) {
       location.x -= width + 2 * r;
     } else if (location.x < -1 * r) {

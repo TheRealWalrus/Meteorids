@@ -15,7 +15,7 @@ class Hud {
 
     fill(255);
     textSize(20);
-    text("LIVES: 666", 5, 20);
+    text("LIVES: " + lives, 5, 20);
 
     textSize(20);
     text("LEVEL " + level, width / 2 - 45, 20);

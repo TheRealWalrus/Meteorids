@@ -12,6 +12,8 @@ class Ship {
   float cooldown = 1;
   color playerColor;
   float invTimer;
+  boolean invincible = false;
+  int invDuration = 2000;
 
   boolean isLeft, isRight, isUp, isSpace;
 
@@ -62,6 +64,16 @@ class Ship {
   void update() {
     acceleration.mult(0);
 
+    //INVINCIVILITY
+    if (invincible) {
+      playerColor = color(255, 0, 0);
+      if (millis() > invTimer + invDuration) {
+        invincible = false;
+      }
+    } else {
+      playerColor = color(0, 255, 255);
+    }
+
     //TURNING
     rotateVertex(nose);
     rotateVertex(tail1);
@@ -108,7 +120,7 @@ class Ship {
     velocity.limit(5);
     location.add(velocity);
 
-    //LOOPING SPACE
+    //BEND SPACE
     if (location.x > width + 15) {
       location.x -= width + 30;
     } else if (location.x < -15) {
@@ -195,7 +207,7 @@ class PlayerProjectile {
       isFinished = true;
     }
 
-    //LOOPING SPACE
+    //BEND SPACE
     if (location.x > width) {
       location.x = 0;
     } else if (location.x < 0) {
