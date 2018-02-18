@@ -8,9 +8,11 @@
 
 Ship ship;
 Hud hud;
+Alien alien;
 ArrayList<PlayerProjectile> playerProjectiles;
 ArrayList<Asteroid> asteroids;
 ArrayList<Partickle> partickles;
+//ArrayList<Alien> alienArray;
 
 int hudHeight = 55;
 int lives = 666;
@@ -30,13 +32,19 @@ void setup() {
   playerProjectiles = new ArrayList();
   asteroids = new ArrayList();
   partickles = new ArrayList();
+  //alienArray =  new ArrayList();
+  //alienArray.add(new Alien());
+  alien = new Alien();
 }
 
 void draw() {
   background(0);
   ship.display();
   ship.update();
-
+  
+  //Alien tempA = alienArray.get(0);
+  //tempA.display();
+  alien.display();
   for (PlayerProjectile bullet : playerProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
     bullet.display();
     bullet.update();
@@ -52,6 +60,15 @@ void draw() {
         bullet.isFinished = true;
         explosion(target.location, target.type);
       }
+    }
+    //if (alien.isAlive && bullet.hitsAlien()) {
+    //  println("alien is shoot");
+    //}
+    PVector 
+    if(polyPoint(alien.vertexes, bullet.location.x, bullet.location.y)) {
+      println("Alien hit!");
+      
+      //BUG: ARRAY DOES CONTAIN COORDINATE RELATED TO ALIEN LOCATION!!
     }
   }
 

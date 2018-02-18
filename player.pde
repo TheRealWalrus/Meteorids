@@ -31,7 +31,6 @@ class Ship {
     flameBase2 = new PVector(-10, 5);
     flameTip = new PVector(-20, 0);
 
-    //playerColor = color(255, 200, 0);
     playerColor = color(0, 255, 255);
   }
   void display() {
@@ -66,7 +65,8 @@ class Ship {
 
     //INVINCIVILITY
     if (invincible) {
-      playerColor = color(255, 0, 0);
+      playerColor = color(255, 200, 0);
+      //playerColor = color(255, 0, 0);
       if (millis() > invTimer + invDuration) {
         invincible = false;
       }
@@ -224,4 +224,11 @@ class PlayerProjectile {
   boolean hits(Asteroid target) {
     return(pointCircle(location, target.location, target.r));
   }
+  
+  //boolean hitsAlien() {
+  //  if (polyPoint(alien.vertexes, location.x, location.y)) {
+  //    return true;
+  //  }
+  //  return false;
+  //}
 }
