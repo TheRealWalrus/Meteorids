@@ -4,15 +4,15 @@
 //multiplayer
 //main menu
 
-//int testCollision = 0;
+int testCounter = 0;
 
 Ship ship;
 Hud hud;
 Alien alien;
 ArrayList<PlayerProjectile> playerProjectiles;
+ArrayList<AlienProjectile> alienProjectiles;
 ArrayList<Asteroid> asteroids;
 ArrayList<Partickle> partickles;
-//ArrayList<Alien> alienArray;
 
 int hudHeight = 55;
 int lives = 666;
@@ -23,17 +23,15 @@ int astSizeLimit = 40;
 
 void setup() {
   size(853, 480);
-  //fullScreen();
   fontMain = loadFont("OCRAExtended-48.vlw");
   textFont(fontMain);
 
   ship = new Ship(width / 2, height / 2);
   hud = new Hud();
   playerProjectiles = new ArrayList();
+  alienProjectiles = new ArrayList();
   asteroids = new ArrayList();
   partickles = new ArrayList();
-  //alienArray =  new ArrayList();
-  //alienArray.add(new Alien());
   alien = new Alien();
 }
 
@@ -41,10 +39,28 @@ void draw() {
   background(0);
   ship.display();
   ship.update();
-  
-  //Alien tempA = alienArray.get(0);
-  //tempA.display();
+
+  for (AlienProjectile bullet : alienProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
+    bullet.display();
+    bullet.update();
+    for (int j = 0; j < asteroids.size(); j++) {
+      Asteroid target = asteroids.get(j);
+      if (bullet.hits(target)) {
+        if (target.type < 3) {
+          asteroids.add(new Asteroid(target.location.x, target.location.y, target.type + 1));
+          asteroids.add(new Asteroid(target.location.x, target.location.y, target.type + 1));
+        }
+        target.isFinished = true;
+        bullet.isFinished = true;
+        explosion(target.location, target.type);
+      }
+    }
+  }
+
   alien.display();
+  alien.update();
+  alien.shoot();
+  
   for (PlayerProjectile bullet : playerProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
     bullet.display();
     bullet.update();
@@ -61,20 +77,17 @@ void draw() {
         explosion(target.location, target.type);
       }
     }
-    //if (alien.isAlive && bullet.hitsAlien()) {
-    //  println("alien is shoot");
-    //}
-    PVector 
-    if(polyPoint(alien.vertexes, bullet.location.x, bullet.location.y)) {
-      println("Alien hit!");
-      
-      //BUG: ARRAY DOES CONTAIN COORDINATE RELATED TO ALIEN LOCATION!!
+    //TESTS ALIEN HIT DETECTION
+    if (polyPoint(alien.verticesAbs, bullet.location.x, bullet.location.y)) {
+      testCounter++;
+      println(testCounter);
     }
   }
 
   for (Asteroid part : asteroids) {
     part.display();
     part.update();
+
     //SHIP COLLISION
     PVector noseLoc = PVector.add(ship.nose, ship.location);
     PVector tail1Loc = PVector.add(ship.tail1, ship.location);
@@ -99,6 +112,13 @@ void draw() {
     PlayerProjectile part = playerProjectiles.get(i);
     if (part.isFinished) {
       playerProjectiles.remove(i);
+    }
+  }
+
+  for (int i = alienProjectiles.size() - 1; i >= 0; i--) {
+    AlienProjectile part = alienProjectiles.get(i);
+    if (part.isFinished) {
+      alienProjectiles.remove(i);
     }
   }
 
