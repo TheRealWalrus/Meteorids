@@ -4,7 +4,8 @@ class Alien {
   PVector[] verticesAbs;
 
   float scl = 1.3;
-      int weaponTimer;
+  int weaponTimer;
+  float accuracy = PI / 2;
 
   Alien() {
     location = new PVector(width / 2, height / 2);
@@ -60,10 +61,6 @@ class Alien {
     location.add(velocity);
     location.add(velocity2);
 
-    //STOPS ALIEN IN THE MIDDLE
-    location = new PVector(width / 2, height / 2);
-
-
     //BEND SPACE
     if (verticesAbs[5].x > width) {
       location.x -= width + vertices[2].x * 2;
@@ -80,9 +77,9 @@ class Alien {
   }
 
   void shoot() {
-
-    if (millis() - weaponTimer > 200) {
-      PVector porjectileVel = PVector.fromAngle(PI);
+    if (millis() - weaponTimer > 1200) {
+      PVector porjectileVel = PVector.sub(ship.location, location);
+      porjectileVel.rotate(random(accuracy / -2, accuracy / 2));
       alienProjectiles.add(new AlienProjectile(porjectileVel));
       weaponTimer = millis();
     }
@@ -99,7 +96,7 @@ class AlienProjectile {
     location = alien.location.copy();
     velocity = _velocity.copy();
     velocity.setMag(7);
-    //velocity.add(alien.velocity);
+    velocity.add(alien.velocity);
     if (velocity.mag() < 7) {
       velocity.setMag(7);
     }

@@ -182,8 +182,10 @@ class PlayerProjectile {
   PVector velocity;
   boolean isFinished = false;
   int timer;
+  //PVector lastLoc;
 
   PlayerProjectile(PVector _location, PVector _shipVel, PVector _dir) {
+    //lastLoc = _location.copy();
     location = _location.copy();
     velocity = _dir.copy();
     velocity.setMag(7);
@@ -219,6 +221,8 @@ class PlayerProjectile {
     } else if (location.y < hudHeight) {
       location.y = height;
     }
+    
+
   }
 
   boolean hits(Asteroid target) {
