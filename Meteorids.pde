@@ -89,16 +89,16 @@ void draw() {
     part.update();
 
     //SHIP COLLISION
-    PVector noseLoc = PVector.add(ship.nose, ship.location);
-    PVector tail1Loc = PVector.add(ship.tail1, ship.location);
-    PVector tail2Loc = PVector.add(ship.tail2, ship.location);
-    if (lineCircle(noseLoc, tail1Loc, part.location, part.r) || lineCircle(noseLoc, tail2Loc, part.location, part.r)) {
-      if (!ship.invincible) {
-        lives--;
-        ship.invincible = true;
-        ship.invTimer = millis();
-      }
-    }
+    //PVector noseLoc = PVector.add(ship.nose, ship.location);
+    //PVector tail1Loc = PVector.add(ship.tail1, ship.location);
+    //PVector tail2Loc = PVector.add(ship.tail2, ship.location);
+    //if (lineCircle(noseLoc, tail1Loc, part.location, part.r) || lineCircle(noseLoc, tail2Loc, part.location, part.r)) {
+    //  if (!ship.invincible) {
+    //    lives--;
+    //    ship.invincible = true;
+    //    ship.invTimer = millis();
+    //  }
+    //}
   }
 
   for (Partickle part : partickles) {

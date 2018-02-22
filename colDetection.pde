@@ -1,6 +1,7 @@
 //Collision Detection by Jeff Thompson
 //http://www.jeffreythompson.org/collision-detection/
 
+// POINT/CIRCLE
 boolean pointCircle(PVector point, PVector circle, float r) {
   float distance = PVector.dist(point, circle);
   if (distance <= r) {
@@ -9,6 +10,7 @@ boolean pointCircle(PVector point, PVector circle, float r) {
   return false;
 }
 
+// LINE/POINT
 boolean linePoint(PVector line1, PVector line2, PVector point) {
 
   // get distance from the point to the two ends of the line
@@ -32,6 +34,7 @@ boolean linePoint(PVector line1, PVector line2, PVector point) {
   return false;
 }
 
+// LINE/CIRCLE
 boolean lineCircle(PVector point1, PVector point2, PVector circle, float r) {
 
   // is either end INSIDE the circle?
@@ -65,6 +68,7 @@ boolean lineCircle(PVector point1, PVector point2, PVector circle, float r) {
   return false;
 }
 
+// POLYGON/POINT
 boolean polyPoint(PVector[] vertices, float px, float py) {
   boolean collision = false;
 
@@ -93,6 +97,7 @@ boolean polyPoint(PVector[] vertices, float px, float py) {
   return collision;
 }
 
+// LINE/LINE
 boolean lineLine(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
 
   // calculate the distance to intersection point

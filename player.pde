@@ -3,7 +3,9 @@ class Ship {
   PVector velocity;
   PVector acceleration;
 
-  PVector nose, mid1, mid2, tail1, tail2, flameBase1, flameBase2, flameTip;
+  PVector[] vertices;
+  PVector[] flameVertices;
+
 
   float angVel = 0.1;
   int weaponTimer = 0;
@@ -22,18 +24,26 @@ class Ship {
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
 
-    nose = new PVector(15, 0);
-    tail1 = new PVector(-15, -10);
-    mid1 = new PVector(-10, -8);
-    mid2 = new PVector(-10, 8);
-    tail2 = new PVector(-15, 10);
-    flameBase1 = new PVector(-10, -5);
-    flameBase2 = new PVector(-10, 5);
-    flameTip = new PVector(-20, 0);
+    vertices = new PVector[5];
+    flameVertices = new PVector[3];
+
+    vertices[0] = new PVector(15, 0);
+    vertices[1] = new PVector(-15, -10);
+    vertices[2] = new PVector(-10, -8);
+    vertices[3] = new PVector(-10, 8);
+    vertices[4] = new PVector(-15, 10);
+
+    flameVertices[0] = new PVector(-10, -5);
+    flameVertices[1] = new PVector(-10, 5);
+    flameVertices[2] = new PVector(-20, 0);
 
     playerColor = color(0, 255, 255);
+
+    setRelative(false);
   }
+
   void display() {
+    //println(vertices[0].x);
     noFill();
     //Afterburner
     if (isUp) {
@@ -43,20 +53,26 @@ class Ship {
         noStroke();
       }
       beginShape();
-      drawShip(flameBase1);
-      drawShip(flameBase2);
-      drawShip(flameTip);
+      //drawShip(flameBase1);
+      //drawShip(flameBase2);
+      //drawShip(flameTip);
+      for (int i = 0; i < flameVertices.length; i++) {
+        vertex(flameVertices[i].x, flameVertices[i].y);
+      }
       endShape(CLOSE);
     }
 
     fill(0);
     stroke(playerColor);
     beginShape();
-    drawShip(nose);
-    drawShip(tail1);
-    drawShip(mid1);
-    drawShip(mid2);
-    drawShip(tail2);
+    //drawShip(nose);
+    //drawShip(tail1);
+    //drawShip(mid1);
+    //drawShip(mid2);
+    //drawShip(tail2);
+    for (int i = 0; i < vertices.length; i++) {
+      vertex(vertices[i].x, vertices[i].y);
+    }
     endShape(CLOSE);
   }
 
@@ -73,28 +89,30 @@ class Ship {
     } else {
       playerColor = color(0, 255, 255);
     }
+    
+    setRelative(true);
 
     //TURNING
-    rotateVertex(nose);
-    rotateVertex(tail1);
-    rotateVertex(mid1);
-    rotateVertex(mid2);
-    rotateVertex(tail2);
-    rotateVertex(flameBase1);
-    rotateVertex(flameBase2);
-    rotateVertex(flameTip);
+    for (int i = 0; i < vertices.length; i++) {
+      vertices[i].rotate(angVel * (int(isRight) - int(isLeft)));
+    }
+    for (int i = 0; i < flameVertices.length; i++) {
+      flameVertices[i].rotate(angVel * (int(isRight) - int(isLeft)));
+    }
+    
+    setRelative(false);
 
     //THRUST
     if (isUp) {
-      PVector thrust = nose.copy();
+      PVector thrust = vertices[0].copy();
       thrust.setMag(0.06);
       applyForce(thrust);
     }
 
     //SHOOOT
     if (isSpace && (millis() - weaponTimer > 200) && !overheat) {
-      PVector origo = PVector.add(location, nose);
-      playerProjectiles.add(new PlayerProjectile(origo, velocity, nose));
+      PVector origo = PVector.add(location, vertices[0]);
+      playerProjectiles.add(new PlayerProjectile(origo, velocity, vertices[0]));
       weaponTimer = millis();
       heat += 20;
     }
@@ -131,6 +149,18 @@ class Ship {
       location.y -= height - hudHeight + 30;
     } else if (location.y < hudHeight -15) {
       location.y += height - hudHeight + 30;
+    }
+  }
+  
+  void setRelative(boolean relative) {
+    if (!relative) {
+      for (int i = 0; i < vertices.length; i++) {
+        vertices[i].add(location);
+      }
+    } else {
+      for (int i = 0; i < vertices.length; i++) {
+        vertices[i].sub(location);
+      }
     }
   }
 
@@ -221,14 +251,12 @@ class PlayerProjectile {
     } else if (location.y < hudHeight) {
       location.y = height;
     }
-    
-
   }
 
   boolean hits(Asteroid target) {
     return(pointCircle(location, target.location, target.r));
   }
-  
+
   //boolean hitsAlien() {
   //  if (polyPoint(alien.vertexes, location.x, location.y)) {
   //    return true;
