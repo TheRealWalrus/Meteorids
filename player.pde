@@ -43,8 +43,8 @@ class Ship {
   }
 
   void display() {
-    //println(vertices[0].x);
     noFill();
+    
     //Afterburner
     if (isUp) {
       if (int(random(2)) == 1) {
@@ -53,9 +53,6 @@ class Ship {
         noStroke();
       }
       beginShape();
-      //drawShip(flameBase1);
-      //drawShip(flameBase2);
-      //drawShip(flameTip);
       for (int i = 0; i < flameVertices.length; i++) {
         vertex(flameVertices[i].x, flameVertices[i].y);
       }
@@ -65,11 +62,6 @@ class Ship {
     fill(0);
     stroke(playerColor);
     beginShape();
-    //drawShip(nose);
-    //drawShip(tail1);
-    //drawShip(mid1);
-    //drawShip(mid2);
-    //drawShip(tail2);
     for (int i = 0; i < vertices.length; i++) {
       vertex(vertices[i].x, vertices[i].y);
     }
@@ -89,7 +81,7 @@ class Ship {
     } else {
       playerColor = color(0, 255, 255);
     }
-    
+
     setRelative(true);
 
     //TURNING
@@ -100,11 +92,10 @@ class Ship {
       flameVertices[i].rotate(angVel * (int(isRight) - int(isLeft)));
     }
     
-    setRelative(false);
-
     //THRUST
     if (isUp) {
       PVector thrust = vertices[0].copy();
+      //PVector thrust = new PVector(1, 0);
       thrust.setMag(0.06);
       applyForce(thrust);
     }
@@ -150,16 +141,24 @@ class Ship {
     } else if (location.y < hudHeight -15) {
       location.y += height - hudHeight + 30;
     }
+
+    setRelative(false);
   }
-  
+
   void setRelative(boolean relative) {
     if (!relative) {
       for (int i = 0; i < vertices.length; i++) {
         vertices[i].add(location);
       }
+      for (int i = 0; i < flameVertices.length; i++) {
+        flameVertices[i].add(location);
+      }
     } else {
       for (int i = 0; i < vertices.length; i++) {
         vertices[i].sub(location);
+      }
+      for (int i = 0; i < flameVertices.length; i++) {
+        flameVertices[i].sub(location);
       }
     }
   }
@@ -196,14 +195,6 @@ class Ship {
     default:
       return b;
     }
-  }
-
-  void drawShip(PVector vector) {
-    vertex(vector.x + location.x, vector.y + location.y);
-  }
-
-  void rotateVertex(PVector vector) {
-    vector.rotate(angVel * (int(isRight) - int(isLeft)));
   }
 }
 
