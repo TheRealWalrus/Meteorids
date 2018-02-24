@@ -223,7 +223,7 @@ class PlayerProjectile {
     //fill(ship.playerColor);
     //ellipse(location.x, location.y, 2, 2);
     
-    stroke(255);
+    stroke(ship.playerColor);
     line(lastLoc.x, lastLoc.y, location.x, location.y);
   }
 

@@ -60,7 +60,7 @@ void draw() {
   alien.display();
   alien.update();
   alien.shoot();
-  
+
   for (PlayerProjectile bullet : playerProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
     bullet.display();
     bullet.update();
@@ -99,6 +99,14 @@ void draw() {
     //    ship.invTimer = millis();
     //  }
     //}
+
+    if (polyCircle(ship.vertices, part.location, part.r)) {
+      if (!ship.invincible) {
+        lives--;
+        ship.invincible = true;
+        ship.invTimer = millis();
+      }
+    }
   }
 
   for (Partickle part : partickles) {

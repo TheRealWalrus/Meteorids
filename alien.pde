@@ -88,12 +88,14 @@ class Alien {
 
 class AlienProjectile {
   PVector location;
+  PVector lastLoc;
   PVector velocity;
   boolean isFinished = false;
   int timer;
 
   AlienProjectile(PVector _velocity) {
     location = alien.location.copy();
+    lastLoc = location.copy();
     velocity = _velocity.copy();
     velocity.setMag(7);
     velocity.add(alien.velocity);
@@ -104,12 +106,16 @@ class AlienProjectile {
   }
 
   void display() {
-    noStroke();
-    fill(255);
-    ellipse(location.x, location.y, 2, 2);
+    //noStroke();
+    //fill(255);
+    //ellipse(location.x, location.y, 2, 2);
+    
+    stroke(255);
+    line(lastLoc.x, lastLoc.y, location.x, location.y);
   }
 
   void update() {
+    lastLoc = location.copy();
     location.add(velocity);
 
     if (millis() - timer > 700) {
@@ -119,18 +125,23 @@ class AlienProjectile {
     //BEND SPACE
     if (location.x > width) {
       location.x = 0;
+      lastLoc.x = 0;
     } else if (location.x < 0) {
       location.x = width;
+      lastLoc.x = width;
     }
 
     if (location.y > height) {
       location.y = hudHeight;
+      lastLoc.y = hudHeight;
     } else if (location.y < hudHeight) {
       location.y = height;
+      lastLoc.y = height;
     }
   }
 
   boolean hits(Asteroid target) {
-    return(pointCircle(location, target.location, target.r));
+    //return(pointCircle(location, target.location, target.r));
+    return(lineCircle(location, lastLoc, target.location, target.r));
   }
 }

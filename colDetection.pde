@@ -118,3 +118,40 @@ boolean lineLine(float x1, float y1, float x2, float y2, float x3, float y3, flo
   }
   return false;
 }
+
+// POLYGON/CIRCLE
+boolean polyCircle(PVector[] vertices, PVector c, float r) {
+
+  // go through each of the vertices, plus
+  // the next vertex in the list
+  int next = 0;
+  for (int current=0; current<vertices.length; current++) {
+
+    // get next vertex in list
+    // if we've hit the end, wrap around to 0
+    next = current+1;
+    if (next == vertices.length) next = 0;
+
+    // get the PVectors at our current position
+    // this makes our if statement a little cleaner
+    PVector vc = vertices[current];    // c for "current"
+    PVector vn = vertices[next];       // n for "next"
+
+    // check for collision between the circle and
+    // a line formed between the two vertices
+    boolean collision = lineCircle(vc, vn, c, r);
+    if (collision) return true;
+  }
+
+  // the above algorithm only checks if the circle
+  // is touching the edges of the polygon – in most
+  // cases this is enough, but you can un-comment the
+  // following code to also test if the center of the
+  // circle is inside the polygon
+
+  // boolean centerInside = polygonPoint(vertices, cx,cy);
+  // if (centerInside) return true;
+
+  // otherwise, after all that, return false
+  return false;
+}
