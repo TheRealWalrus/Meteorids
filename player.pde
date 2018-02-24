@@ -200,13 +200,14 @@ class Ship {
 
 class PlayerProjectile {
   PVector location;
+  PVector lastLoc;
   PVector velocity;
   boolean isFinished = false;
   int timer;
   //PVector lastLoc;
 
   PlayerProjectile(PVector _location, PVector _shipVel, PVector _dir) {
-    //lastLoc = _location.copy();
+    lastLoc = _location.copy();
     location = _location.copy();
     velocity = _dir.copy();
     velocity.setMag(7);
@@ -218,12 +219,16 @@ class PlayerProjectile {
   }
 
   void display() {
-    noStroke();
-    fill(ship.playerColor);
-    ellipse(location.x, location.y, 2, 2);
+    //noStroke();
+    //fill(ship.playerColor);
+    //ellipse(location.x, location.y, 2, 2);
+    
+    stroke(255);
+    line(lastLoc.x, lastLoc.y, location.x, location.y);
   }
 
   void update() {
+    lastLoc = location.copy();
     location.add(velocity);
 
     if (millis() - timer > 700) {
@@ -233,14 +238,18 @@ class PlayerProjectile {
     //BEND SPACE
     if (location.x > width) {
       location.x = 0;
+      lastLoc.x = 0;
     } else if (location.x < 0) {
       location.x = width;
+      lastLoc.x = width;
     }
 
     if (location.y > height) {
       location.y = hudHeight;
+      lastLoc.y = hudHeight;
     } else if (location.y < hudHeight) {
       location.y = height;
+      lastLoc.y = height;
     }
   }
 
