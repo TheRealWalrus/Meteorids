@@ -16,10 +16,12 @@ ArrayList<Partickle> partickles;
 
 int hudHeight = 55;
 int lives = 666;
-int level = 0;
+int level = 1;
 int score = 0;
 PFont fontMain;
 int astSizeLimit = 40;
+int nextLevelTimer = -1;
+int playerRespawnTimer = -1;
 
 void setup() {
   size(853, 480);
@@ -32,13 +34,18 @@ void setup() {
   alienProjectiles = new ArrayList();
   asteroids = new ArrayList();
   partickles = new ArrayList();
-  alien = new Alien();
+  alien = new Alien(width / 2, height / 2, true);
+  alien.isAlive = false;
+  spawnAsteroids();
 }
 
 void draw() {
   background(0);
-  ship.display();
-  ship.update();
+
+  if (ship.isAlive) {
+    ship.display();
+    ship.update();
+  }
 
   for (AlienProjectile bullet : alienProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
     bullet.display();
@@ -55,11 +62,22 @@ void draw() {
         explosion(target.location, target.type);
       }
     }
+    //PLAYER IS HIT
+    if (ship.isAlive) {
+      if (polyLine(ship.vertices, bullet.location, bullet.lastLoc)) {
+        ship.isAlive = false;
+        lives--;
+        //ship.invincible = true;
+        //ship.invTimer = millis();
+      }
+    }
   }
 
-  alien.display();
-  alien.update();
-  alien.shoot();
+  if (alien.isAlive) {
+    alien.display();
+    alien.update();
+    alien.shoot();
+  }
 
   for (PlayerProjectile bullet : playerProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
     bullet.display();
@@ -78,9 +96,11 @@ void draw() {
       }
     }
     //TESTS ALIEN HIT DETECTION
-    if (polyPoint(alien.verticesAbs, bullet.location.x, bullet.location.y)) {
-      testCounter++;
-      println(testCounter);
+    if (alien.isAlive) {
+      if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
+        alien.isAlive = false;
+        score += alien.scoreValue;
+      }
     }
   }
 
@@ -99,12 +119,15 @@ void draw() {
     //    ship.invTimer = millis();
     //  }
     //}
-
-    if (polyCircle(ship.vertices, part.location, part.r)) {
-      if (!ship.invincible) {
+    if (ship.isAlive) {
+      if (polyCircle(ship.vertices, part.location, part.r)) {
+        ship.isAlive = false;
         lives--;
-        ship.invincible = true;
-        ship.invTimer = millis();
+        //if (!ship.invincible) {
+        //  lives--;
+        //  ship.invincible = true;
+        //  ship.invTimer = millis();
+        //}
       }
     }
   }
@@ -143,6 +166,7 @@ void draw() {
       partickles.remove(i);
     }
   }
+  checkPlayerRespawn();
   checkNextLevel();
 }
 
@@ -155,28 +179,53 @@ void keyPressed() {
       asteroids.remove(i);
     }
   }
+
+  //SPAWN ALIEN
+  if (keyCode == 65) { // "A" KEY
+    alien = new Alien(random(width), random(height), false);
+  }
 }
 
 void keyReleased() {
   ship.setMove(keyCode, false);
 }
 
-void checkNextLevel() {
-  if (asteroids.size() == 0) {
-    for (int i = 0; i < level + 4; i++) {
-      float spawnX;
-      float spawnY;
-      int spawnAxis = int(random(2));
-      if (spawnAxis == 1) {
-        spawnX = random(-astSizeLimit, width + astSizeLimit);
-        spawnY = height + astSizeLimit;
-      } else {
-        spawnX = width + astSizeLimit;
-        spawnY = random(-astSizeLimit, height + astSizeLimit);
-      }
-      asteroids.add(new Asteroid(spawnX, spawnY, 1));
+void checkPlayerRespawn() {
+  if (!ship.isAlive && playerRespawnTimer < 0) {
+    playerRespawnTimer = millis();
+  }
+  
+  if (playerRespawnTimer >= 0 && millis() > playerRespawnTimer + 3000) {
+    ship = new Ship(width / 2, height / 2);
+    playerRespawnTimer = -1;
+  }
+}
+
+void spawnAsteroids() {
+  for (int i = 0; i < level + 4; i++) {
+    float spawnX;
+    float spawnY;
+    int spawnAxis = int(random(2));
+    if (spawnAxis == 1) {
+      spawnX = random(-astSizeLimit, width + astSizeLimit);
+      spawnY = height + astSizeLimit;
+    } else {
+      spawnX = width + astSizeLimit;
+      spawnY = random(-astSizeLimit, height + astSizeLimit);
     }
+    asteroids.add(new Asteroid(spawnX, spawnY, 1));
+  }
+}
+
+void checkNextLevel() {
+  if (asteroids.size() == 0 && nextLevelTimer < 0) {
+    nextLevelTimer = millis();
+  }
+
+  if (nextLevelTimer >= 0 && millis() > nextLevelTimer + 3000) {
+    spawnAsteroids();
     level++;
+    nextLevelTimer = -1;
   }
 }
 
@@ -219,6 +268,8 @@ class Partickle {
       duration = 300;
     } else if (_type == 3) {
       duration = 150;
+    } else {
+      
     }
   }
 

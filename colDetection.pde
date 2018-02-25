@@ -155,3 +155,36 @@ boolean polyCircle(PVector[] vertices, PVector c, float r) {
   // otherwise, after all that, return false
   return false;
 }
+
+// POLYGON/LINE
+boolean polyLine(PVector[] vertices, PVector line1, PVector line2) {
+
+  // go through each of the vertices, plus the next
+  // vertex in the list
+  int next = 0;
+  for (int current=0; current<vertices.length; current++) {
+
+    // get next vertex in list
+    // if we've hit the end, wrap around to 0
+    next = current+1;
+    if (next == vertices.length) next = 0;
+
+    // get the PVectors at our current position
+    // extract X/Y coordinates from each
+    float x3 = vertices[current].x;
+    float y3 = vertices[current].y;
+    float x4 = vertices[next].x;
+    float y4 = vertices[next].y;
+
+    // do a Line/Line comparison
+    // if true, return 'true' immediately and
+    // stop testing (faster)
+    boolean hit = lineLine(line1.x, line1.y, line2.x, line2.y, x3, y3, x4, y4);
+    if (hit) {
+      return true;
+    }
+  }
+
+  // never got a hit
+  return false;
+}

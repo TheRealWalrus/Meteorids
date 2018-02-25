@@ -16,7 +16,7 @@ class Ship {
   float invTimer;
   boolean invincible = false;
   int invDuration = 2000;
-
+  boolean isAlive = true;
   boolean isLeft, isRight, isUp, isSpace;
 
   Ship(float _x, float _y) {
@@ -37,6 +37,13 @@ class Ship {
     flameVertices[1] = new PVector(-10, 5);
     flameVertices[2] = new PVector(-20, 0);
 
+    for (int i = 0; i < vertices.length; i++) {
+      vertices[i].rotate(1.5 * PI);
+    }
+    for (int i = 0; i < flameVertices.length; i++) {
+      flameVertices[i].rotate(1.5 * PI);
+    }
+
     playerColor = color(0, 255, 255);
 
     setRelative(false);
@@ -44,7 +51,7 @@ class Ship {
 
   void display() {
     noFill();
-    
+
     //Afterburner
     if (isUp) {
       if (int(random(2)) == 1) {
@@ -91,7 +98,7 @@ class Ship {
     for (int i = 0; i < flameVertices.length; i++) {
       flameVertices[i].rotate(angVel * (int(isRight) - int(isLeft)));
     }
-    
+
     //THRUST
     if (isUp) {
       PVector thrust = vertices[0].copy();
@@ -105,8 +112,9 @@ class Ship {
       PVector origo = PVector.add(location, vertices[0]);
       playerProjectiles.add(new PlayerProjectile(origo, velocity, vertices[0]));
       weaponTimer = millis();
-      heat += 20;
+      heat += 18;
     }
+
 
     heat -= cooldown;
     heat = constrain(heat, 0, 100);
@@ -222,7 +230,7 @@ class PlayerProjectile {
     //noStroke();
     //fill(ship.playerColor);
     //ellipse(location.x, location.y, 2, 2);
-    
+
     stroke(ship.playerColor);
     line(lastLoc.x, lastLoc.y, location.x, location.y);
   }

@@ -3,13 +3,24 @@ class Alien {
   PVector[] vertices;
   PVector[] verticesAbs;
 
-  float scl = 1.3;
+  float scl;
   int weaponTimer;
-  float accuracy = PI / 2;
+  float accuracy;
+  int scoreValue;
+  boolean isAlive = true;
 
-  Alien() {
-    location = new PVector(width / 2, height / 2);
-    //velocity = PVector.fromAngle(random(2 * PI));
+  Alien(float _x, float _y, boolean _isBig) {
+    location = new PVector(_x, _y);
+    if (_isBig) {
+      scl = 1.3;
+      accuracy = PI / 2;
+      scoreValue = 200;
+    } else {
+      scl = 0.8;
+      accuracy = PI / 8;
+      scoreValue = 1000;
+    }
+
     velocity = PVector.fromAngle(random(2 * PI));
     steeringForce = velocity.copy();
     steeringForce.rotate(0.5 * PI);
