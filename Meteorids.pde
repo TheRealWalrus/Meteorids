@@ -1,6 +1,7 @@
 //TO DO:
-//improve col detection
-//add alien ships
+//fix explosion
+//improve particle effects
+
 //multiplayer
 //main menu
 
@@ -63,7 +64,7 @@ void draw() {
       }
     }
     //PLAYER IS HIT
-    if (ship.isAlive) {
+    if (ship.isAlive && !ship.invincible) {
       if (polyLine(ship.vertices, bullet.location, bullet.lastLoc)) {
         ship.isAlive = false;
         lives--;
@@ -104,7 +105,8 @@ void draw() {
     }
   }
 
-  for (Asteroid part : asteroids) {
+  for (int i = 0; i < asteroids.size(); i++) {
+    Asteroid part = asteroids.get(i);
     part.display();
     part.update();
 
@@ -119,10 +121,17 @@ void draw() {
     //    ship.invTimer = millis();
     //  }
     //}
-    if (ship.isAlive) {
+    if (ship.isAlive && !ship.invincible) {
       if (polyCircle(ship.vertices, part.location, part.r)) {
         ship.isAlive = false;
         lives--;
+        //ENHANCED LOOP NEEDS TO BE REPLACED
+        if (part.type < 3) {
+          asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
+          asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
+        }
+        part.isFinished = true;
+        explosion(part.location, part.type);
         //if (!ship.invincible) {
         //  lives--;
         //  ship.invincible = true;
@@ -194,9 +203,11 @@ void checkPlayerRespawn() {
   if (!ship.isAlive && playerRespawnTimer < 0) {
     playerRespawnTimer = millis();
   }
-  
+
   if (playerRespawnTimer >= 0 && millis() > playerRespawnTimer + 3000) {
     ship = new Ship(width / 2, height / 2);
+    ship.invincible = true;
+    ship.invTimer = millis();
     playerRespawnTimer = -1;
   }
 }
@@ -269,7 +280,6 @@ class Partickle {
     } else if (_type == 3) {
       duration = 150;
     } else {
-      
     }
   }
 
