@@ -132,6 +132,7 @@ void draw() {
         }
         part.isFinished = true;
         explosion(part.location, part.type);
+        explosion(ship.location, 4);
         //if (!ship.invincible) {
         //  lives--;
         //  ship.invincible = true;
@@ -250,9 +251,12 @@ void explosion(PVector _location, int _type) {
   } else if (_type == 2) {
     minPartickles = 4;
     maxPartickles = 6;
-  } else {
+  } else if (_type == 3) {
     minPartickles = 3;
     maxPartickles = 5;
+  } else {
+    minPartickles = 4;
+    maxPartickles = 4;
   }
 
   for (int k = 0; k < int(random(minPartickles, maxPartickles + 1)); k++) {
@@ -266,12 +270,17 @@ class Partickle {
   int duration;
   int timer;
   boolean isFinished = false;
+  float lineLength;
+  float angVel = random(0.1);
+  float theta;
+  int type;
 
   Partickle(PVector _location, int _type) {
     location = _location.copy();
     velocity = PVector.fromAngle(random(2 * PI));
     velocity.mult(random(1, 3));
     timer = millis();
+    type = _type;
 
     if (_type == 1) {
       duration = 500;
@@ -280,16 +289,34 @@ class Partickle {
     } else if (_type == 3) {
       duration = 150;
     } else {
+      duration = 1000;
+      lineLength = 30;
+      theta = 0;
     }
   }
 
   void display() {
-    noStroke();
-    fill(255);
-    ellipse(location.x, location.y, 2, 2);
+    if (type < 4) {
+      noStroke();
+      fill(255);
+      ellipse(location.x, location.y, 2, 2);
+    } else {
+      pushMatrix();
+      //rotate(theta);
+      stroke(ship.playerColor);
+      fill(255, 0, 0);
+      translate(location.x, location.y);
+      ellipse(0, 0, 5, 5);
+      line(-lineLength / 2, 0, lineLength, 0);
+      //line(-10, 0, 20, 0);
+      popMatrix();
+    }
   }
 
   void update() {
+    if (type == 4) {
+      theta += angVel;
+    }
     location.add(velocity);
     if (millis() > timer + duration) {
       isFinished = true;
