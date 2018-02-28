@@ -1,9 +1,13 @@
 //TO DO:
-//fix explosion
-//improve particle effects
 
-//multiplayer
+//alien spawn
+//difficulty review
+
+//end game screen
 //main menu
+//multiplayer
+
+//improve particle effects
 
 int testCounter = 0;
 
@@ -68,6 +72,7 @@ void draw() {
       if (polyLine(ship.vertices, bullet.location, bullet.lastLoc)) {
         ship.isAlive = false;
         lives--;
+        explosion(ship.location, 4);
         //ship.invincible = true;
         //ship.invTimer = millis();
       }
@@ -271,7 +276,7 @@ class Partickle {
   int timer;
   boolean isFinished = false;
   float lineLength;
-  float angVel = random(0.1);
+  float angVel = random(0.2);
   float theta;
   int type;
 
@@ -289,8 +294,8 @@ class Partickle {
     } else if (_type == 3) {
       duration = 150;
     } else {
-      duration = 1000;
-      lineLength = 30;
+      duration = 500;
+      lineLength = 15;
       theta = 0;
     }
   }
@@ -302,13 +307,13 @@ class Partickle {
       ellipse(location.x, location.y, 2, 2);
     } else {
       pushMatrix();
-      //rotate(theta);
+      
       stroke(ship.playerColor);
       fill(255, 0, 0);
       translate(location.x, location.y);
-      ellipse(0, 0, 5, 5);
-      line(-lineLength / 2, 0, lineLength, 0);
-      //line(-10, 0, 20, 0);
+      rotate(theta);
+      //ellipse(0, 0, 5, 5);
+      line(-lineLength / 2, 0, lineLength / 2, 0);
       popMatrix();
     }
   }

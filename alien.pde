@@ -8,8 +8,10 @@ class Alien {
   float accuracy;
   int scoreValue;
   boolean isAlive = true;
+  int alienTimer;
 
   Alien(float _x, float _y, boolean _isBig) {
+    alienTimer = millis();
     location = new PVector(_x, _y);
     if (_isBig) {
       scl = 1.3;
@@ -75,15 +77,25 @@ class Alien {
     //BEND SPACE
     if (verticesAbs[5].x > width) {
       location.x -= width + vertices[2].x * 2;
+      checkTimer();
     } else if (verticesAbs[2].x < 0) {
       location.x += width + vertices[2].x * 2;
+      checkTimer();
     }
 
     if (verticesAbs[0].y > height) {
       location.y -= height - hudHeight + vertices[3].y * 2;
+      checkTimer();
     } else if (verticesAbs[3].y < hudHeight) {
       //println(location.y);
       location.y += height - hudHeight + vertices[3].y * 2;
+      checkTimer();
+    }
+  }
+
+  void checkTimer() {
+    if (alienTimer + 10000 < millis()) {
+      isAlive = false;
     }
   }
 
@@ -120,7 +132,7 @@ class AlienProjectile {
     //noStroke();
     //fill(255);
     //ellipse(location.x, location.y, 2, 2);
-    
+
     stroke(255);
     line(lastLoc.x, lastLoc.y, location.x, location.y);
   }
