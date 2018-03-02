@@ -1,9 +1,9 @@
 //TO DO:
 
 //alien spawn
-//difficulty review
-
+//ship-alien collision
 //end game screen
+
 //main menu
 //multiplayer
 
@@ -27,6 +27,10 @@ PFont fontMain;
 int astSizeLimit = 40;
 int nextLevelTimer = -1;
 int playerRespawnTimer = -1;
+
+int alienFrequency = 840;
+int aliensPerLevel = 5;
+int alienCounter = 0;
 
 void setup() {
   size(853, 480);
@@ -106,6 +110,13 @@ void draw() {
       if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
         alien.isAlive = false;
         score += alien.scoreValue;
+        int expType;
+        if (alien.isBig) {
+          expType = 1;
+        } else {
+          expType = 2;
+        }
+        explosion(alien.location, expType);
       }
     }
   }
@@ -182,6 +193,7 @@ void draw() {
     }
   }
   checkPlayerRespawn();
+  checkAlienSpawn();
   checkNextLevel();
 }
 
@@ -197,7 +209,8 @@ void keyPressed() {
 
   //SPAWN ALIEN
   if (keyCode == 65) { // "A" KEY
-    alien = new Alien(random(width), random(height), false);
+    //alien = new Alien(random(width), random(height), false);
+    spawnAlien();
   }
 }
 
@@ -241,6 +254,7 @@ void checkNextLevel() {
 
   if (nextLevelTimer >= 0 && millis() > nextLevelTimer + 3000) {
     spawnAsteroids();
+    alienCounter = 0;
     level++;
     nextLevelTimer = -1;
   }
@@ -307,7 +321,7 @@ class Partickle {
       ellipse(location.x, location.y, 2, 2);
     } else {
       pushMatrix();
-      
+
       stroke(ship.playerColor);
       fill(255, 0, 0);
       translate(location.x, location.y);
@@ -326,5 +340,35 @@ class Partickle {
     if (millis() > timer + duration) {
       isFinished = true;
     }
+  }
+}
+
+void checkAlienSpawn() {
+  if (!alien.isAlive && int(random(0, alienFrequency)) == 0 && alienCounter < aliensPerLevel) {
+    spawnAlien();
+    alienCounter++;
+  }
+}
+
+void spawnAlien() {
+  float spawnX;
+  float spawnY;
+
+  if (randomBool()) {
+    spawnX = random(-1 * alien.vertices[2].x, width + alien.vertices[2].x);
+    spawnY = height + alien.vertices[3].y;
+  } else {
+    spawnX = width + alien.vertices[2].x;
+    spawnY = random(-1 * alien.vertices[3].y, height + alien.vertices[3].y);
+  }
+
+  alien = new Alien(spawnX, spawnY, randomBool());
+}
+
+boolean randomBool() {
+  if (random(1) > 0.5) {
+    return true;
+  } else {
+    return false;
   }
 }

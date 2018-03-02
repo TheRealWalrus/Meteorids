@@ -9,10 +9,12 @@ class Alien {
   int scoreValue;
   boolean isAlive = true;
   int alienTimer;
+  boolean isBig;
 
   Alien(float _x, float _y, boolean _isBig) {
     alienTimer = millis();
     location = new PVector(_x, _y);
+    isBig = _isBig;
     if (_isBig) {
       scl = 1.3;
       accuracy = PI / 2;
