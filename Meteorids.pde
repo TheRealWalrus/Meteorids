@@ -20,17 +20,19 @@ ArrayList<Asteroid> asteroids;
 ArrayList<Partickle> partickles;
 
 int hudHeight = 55;
-int lives = 666;
+int lives = 1;
 int level = 1;
 int score = 0;
 PFont fontMain;
 int astSizeLimit = 40;
 int nextLevelTimer = -1;
 int playerRespawnTimer = -1;
+int endGameTimer = -1;
 
 int alienFrequency = 840;
 int aliensPerLevel = 5;
 int alienCounter = 0;
+int state = 1;
 
 void setup() {
   size(853, 480);
@@ -50,7 +52,17 @@ void setup() {
 
 void draw() {
   background(0);
+  if (state == 1) {
+    runGame();
+  } else if (state == 2) {
+    endGameScreen();
+  }
+}
 
+void endGameScreen() {
+}
+
+void runGame() {
   if (ship.isAlive) {
     ship.display();
     ship.update();
@@ -77,8 +89,6 @@ void draw() {
         ship.isAlive = false;
         lives--;
         explosion(ship.location, 4);
-        //ship.invincible = true;
-        //ship.invTimer = millis();
       }
     }
   }
@@ -105,7 +115,7 @@ void draw() {
         explosion(target.location, target.type);
       }
     }
-    //TESTS ALIEN HIT DETECTION
+    // ALIEN HIT DETECTION
     if (alien.isAlive) {
       if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
         alien.isAlive = false;
@@ -127,16 +137,6 @@ void draw() {
     part.update();
 
     //SHIP COLLISION
-    //PVector noseLoc = PVector.add(ship.nose, ship.location);
-    //PVector tail1Loc = PVector.add(ship.tail1, ship.location);
-    //PVector tail2Loc = PVector.add(ship.tail2, ship.location);
-    //if (lineCircle(noseLoc, tail1Loc, part.location, part.r) || lineCircle(noseLoc, tail2Loc, part.location, part.r)) {
-    //  if (!ship.invincible) {
-    //    lives--;
-    //    ship.invincible = true;
-    //    ship.invTimer = millis();
-    //  }
-    //}
     if (ship.isAlive && !ship.invincible) {
       if (polyCircle(ship.vertices, part.location, part.r)) {
         ship.isAlive = false;
@@ -149,11 +149,6 @@ void draw() {
         part.isFinished = true;
         explosion(part.location, part.type);
         explosion(ship.location, 4);
-        //if (!ship.invincible) {
-        //  lives--;
-        //  ship.invincible = true;
-        //  ship.invTimer = millis();
-        //}
       }
     }
   }
@@ -162,7 +157,6 @@ void draw() {
     part.display();
     part.update();
   }
-  hud.drawHud();
 
   //REMOVE LOOPS
   for (int i = playerProjectiles.size() - 1; i >= 0; i--) {
@@ -192,9 +186,34 @@ void draw() {
       partickles.remove(i);
     }
   }
+  hud.drawHud();
   checkPlayerRespawn();
   checkAlienSpawn();
   checkNextLevel();
+  checkEndGame();
+}
+
+//void checkPlayerRespawn() {
+//  if (!ship.isAlive && playerRespawnTimer < 0) {
+//    playerRespawnTimer = millis();
+//  }
+
+//  if (playerRespawnTimer >= 0 && millis() > playerRespawnTimer + 3000) {
+//    ship = new Ship(width / 2, height / 2);
+//    ship.invincible = true;
+//    ship.invTimer = millis();
+//    playerRespawnTimer = -1;
+//  }
+//}
+
+void checkEndGame() {
+  if (0 > lives && 0 > endGameTimer) {
+    endGameTimer = millis();
+  }
+
+  if (endGameTimer >= 0 && millis() > endGameTimer + 3000) {
+    state = 2;
+  }
 }
 
 void keyPressed() {
@@ -209,7 +228,6 @@ void keyPressed() {
 
   //SPAWN ALIEN
   if (keyCode == 65) { // "A" KEY
-    //alien = new Alien(random(width), random(height), false);
     spawnAlien();
   }
 }
