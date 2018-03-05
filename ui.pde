@@ -32,6 +32,7 @@ class Hud {
     rect(5, hudHeight / 2, width/2 - 5, hudHeight / 2 - 5);
 
 
+
     noStroke();
     if (!ship.overheat) {
       fill(ship.playerColor);
@@ -47,4 +48,26 @@ class Hud {
     //stroke(255, 255, 0);
     //rect(width / 2 + 5, hudHeight / 2, width / 2 - 10, hudHeight / 2 - 5);
   }
+}
+
+void endGameScreen() {
+    fill(255);
+    textSize(40);
+    text("FINAL SCORE: " + score, width / 2 - 200, height / 2 - 30);
+    
+    textSize(15);
+    text("PRESS ANY KEY TO CONTINUE", width / 2 - 180, height / 2 + 30);
+}
+
+void mainMenu() {
+    fill(255);
+    textSize(40);
+    text("METEROIDS", width / 2 - 100, height / 2 - 80);
+    
+    textSize(20);
+    text("1 PLAYER", width / 2 - 40, height / 2 + 20);
+    text("2 PLAYERS", width / 2 - 40, height / 2 + 60);
+    
+    fill(100);
+    text("BY FERA", width - 120, height -30);
 }

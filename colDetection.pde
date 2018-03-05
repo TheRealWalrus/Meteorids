@@ -108,11 +108,11 @@ boolean lineLine(float x1, float y1, float x2, float y2, float x3, float y3, flo
   if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
 
     // optionally, draw a circle where the lines meet
-    float intersectionX = x1 + (uA * (x2-x1));
-    float intersectionY = y1 + (uA * (y2-y1));
-    fill(255,0,0);
-    noStroke();
-    ellipse(intersectionX,intersectionY, 20,20);
+    //float intersectionX = x1 + (uA * (x2-x1));
+    //float intersectionY = y1 + (uA * (y2-y1));
+    //fill(255,0,0);
+    //noStroke();
+    //ellipse(intersectionX,intersectionY, 20,20);
 
     return true;
   }
@@ -186,5 +186,36 @@ boolean polyLine(PVector[] vertices, PVector line1, PVector line2) {
   }
 
   // never got a hit
+  return false;
+}
+
+// POLYGON/POLYGON
+boolean polyPoly(PVector[] p1, PVector[] p2) {
+
+  // go through each of the vertices, plus the next
+  // vertex in the list
+  int next = 0;
+  for (int current=0; current<p1.length; current++) {
+
+    // get next vertex in list
+    // if we've hit the end, wrap around to 0
+    next = current+1;
+    if (next == p1.length) next = 0;
+
+    // get the PVectors at our current position
+    // this makes our if statement a little cleaner
+    PVector vc = p1[current];    // c for "current"
+    PVector vn = p1[next];       // n for "next"
+
+    // now we can use these two points (a line) to compare
+    // to the other polygon's vertices using polyLine()
+    boolean collision = polyLine(p2, vc,vn);
+    if (collision) return true;
+
+    // optional: check if the 2nd polygon is INSIDE the first
+    collision = polyPoint(p1, p2[0].x, p2[0].y);
+    if (collision) return true;
+  }
+
   return false;
 }

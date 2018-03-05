@@ -22,11 +22,12 @@ class Asteroid {
       r = astSizeLimit;
       scoreValue = 30;
     } else if (_type == 2) {
-      r = 20;
+      r = astSizeLimit / 2;
       scoreValue = 50;
     } else {
-      r = 10;
+      r = astSizeLimit / 4;
       scoreValue = 100;
+      velocity.mult(1.5);
     }
 
     theta = 2 * PI / scl;

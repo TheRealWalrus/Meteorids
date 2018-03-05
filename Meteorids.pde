@@ -1,43 +1,52 @@
 //TO DO:
 
-//alien spawn
-//ship-alien collision
-//end game screen
-
 //main menu
-//multiplayer
 
+//sounds
+//multiplayer
+//ui improvements
 //improve particle effects
 
-int testCounter = 0;
+int state = 0;
+int lives;
+int level;
+int score;
+int nextLevelTimer;
+int playerRespawnTimer;
+int endGameTimer;
+int alienCounter;
 
 Ship ship;
 Hud hud;
 Alien alien;
+
 ArrayList<PlayerProjectile> playerProjectiles;
 ArrayList<AlienProjectile> alienProjectiles;
 ArrayList<Asteroid> asteroids;
 ArrayList<Partickle> partickles;
 
-int hudHeight = 55;
-int lives = 1;
-int level = 1;
-int score = 0;
 PFont fontMain;
+int hudHeight = 55;
 int astSizeLimit = 40;
-int nextLevelTimer = -1;
-int playerRespawnTimer = -1;
-int endGameTimer = -1;
-
 int alienFrequency = 840;
 int aliensPerLevel = 5;
-int alienCounter = 0;
-int state = 1;
+int playerMode = 1;
 
 void setup() {
   size(853, 480);
   fontMain = loadFont("OCRAExtended-48.vlw");
   textFont(fontMain);
+}
+
+void setupGame() {
+  state = 1;
+  lives = 2;
+  level = 1;
+  score = 0;
+  nextLevelTimer = -1;
+  playerRespawnTimer = -1;
+  endGameTimer = -1;
+  alienCounter = 0;
 
   ship = new Ship(width / 2, height / 2);
   hud = new Hud();
@@ -56,16 +65,42 @@ void draw() {
     runGame();
   } else if (state == 2) {
     endGameScreen();
+  } else {
+    mainMenu();
   }
-}
-
-void endGameScreen() {
 }
 
 void runGame() {
   if (ship.isAlive) {
     ship.display();
     ship.update();
+  }
+  
+  
+    //  if (alien.isAlive) {
+    //  if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
+    //    alien.isAlive = false;
+    //    score += alien.scoreValue;
+    //    int expType;
+    //    if (alien.isBig) {
+    //      expType = 1;
+    //    } else {
+    //      expType = 2;
+    //    }
+    //    explosion(alien.location, expType);
+    //  }
+    //}
+  
+  if (alien.isAlive && ship.isAlive) {
+    if (polyPoly(alien.verticesAbs, ship.vertices)) {
+      if (alien.isBig) {
+        alien.isAlive = false;
+        explosion(ship.location, 1);
+      }
+      ship.isAlive = false;
+      explosion(ship.location, 4);
+      lives--;
+    }
   }
 
   for (AlienProjectile bullet : alienProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
@@ -217,6 +252,12 @@ void checkEndGame() {
 }
 
 void keyPressed() {
+  if (state == 2) {
+    state = 0;
+  } else if (state == 0) {
+    setupGame();
+  }
+  
   ship.setMove(keyCode, true);
 
   //NEXT LEVEL CHEAT
