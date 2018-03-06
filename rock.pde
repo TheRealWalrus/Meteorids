@@ -79,10 +79,18 @@ class Asteroid {
       location.x += width + 2 * r;
     }
 
-    if (location.y > height + r) {
-      location.y -= height - hudHeight + 2 * r;
-    } else if (location.y < hudHeight -1 * r) {
-      location.y += height - hudHeight + 2 * r;
+    if (state == 1) {
+      if (location.y > height + r) {
+        location.y -= height - hudHeight + 2 * r;
+      } else if (location.y < hudHeight -1 * r) {
+        location.y += height - hudHeight + 2 * r;
+      }
+    } else {
+      if (location.y > height + r) {
+        location.y -= height + 2 * r;
+      } else if (location.y <  -1 * r) {
+        location.y += height  + 2 * r;
+      }
     }
   }
 }

@@ -7,7 +7,7 @@
 //ui improvements
 //improve particle effects
 
-int state = 0;
+int state;
 int lives;
 int level;
 int score;
@@ -36,6 +36,7 @@ void setup() {
   size(853, 480);
   fontMain = loadFont("OCRAExtended-48.vlw");
   textFont(fontMain);
+  setupMenu();
 }
 
 void setupGame() {
@@ -74,8 +75,7 @@ void runGame() {
   if (ship.isAlive) {
     ship.display();
     ship.update();
-  }
-  
+  }  
   
     //  if (alien.isAlive) {
     //  if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
@@ -253,7 +253,7 @@ void checkEndGame() {
 
 void keyPressed() {
   if (state == 2) {
-    state = 0;
+    setupMenu();
   } else if (state == 0) {
     setupGame();
   }

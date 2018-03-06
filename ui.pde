@@ -51,23 +51,52 @@ class Hud {
 }
 
 void endGameScreen() {
-    fill(255);
-    textSize(40);
-    text("FINAL SCORE: " + score, width / 2 - 200, height / 2 - 30);
-    
-    textSize(15);
-    text("PRESS ANY KEY TO CONTINUE", width / 2 - 180, height / 2 + 30);
+  fill(255);
+  textSize(40);
+  text("FINAL SCORE: " + score, width / 2 - 200, height / 2 - 30);
+
+  textSize(15);
+  text("PRESS ANY KEY TO CONTINUE", width / 2 - 180, height / 2 + 30);
 }
 
 void mainMenu() {
-    fill(255);
-    textSize(40);
-    text("METEROIDS", width / 2 - 100, height / 2 - 80);
-    
-    textSize(20);
-    text("1 PLAYER", width / 2 - 40, height / 2 + 20);
-    text("2 PLAYERS", width / 2 - 40, height / 2 + 60);
-    
-    fill(100);
-    text("BY FERA", width - 120, height -30);
+  for (int i = 0; i < asteroids.size(); i++) {
+    Asteroid part = asteroids.get(i);
+    part.display();
+    part.update();
+  }
+
+  ship.display();
+
+  fill(255);
+  textSize(40);
+  text("METEROIDS", width / 2 - 100, height / 2 - 80);
+
+  textSize(20);
+  text("1 PLAYER", width / 2 - 40, height / 2 + 20);
+  text("2 PLAYERS", width / 2 - 40, height / 2 + 60);
+
+  fill(100);
+  text("BY FERA", width - 120, height -30);
+}
+
+void setupMenu() {
+  state = 0;
+  asteroids = new ArrayList();
+  spawnAsteroidsRandom();
+  ship = new Ship(width / 2 - 80, height / 2 + 14);
+  ship.playerColor = 255;
+  ship.setRelative(true);
+  for (int i = 0; i < ship.vertices.length; i++) {
+    ship.vertices[i].rotate(0.5 * PI);
+    //ship.vertices[i].mult(0.8);
+  }
+
+  ship.setRelative(false);
+}
+
+void spawnAsteroidsRandom() {
+  for (int i = 0; i < 10; i++) {
+    asteroids.add(new Asteroid(random(width), random(height), int(random(1, 4))));
+  }
 }
