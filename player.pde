@@ -13,11 +13,14 @@ class Ship {
   boolean overheat = false;
   float cooldown = 1;
   color playerColor;
+  color defaultColor;
   float invTimer;
   boolean invincible = false;
   int invDuration = 2000;
   boolean isAlive = true;
   boolean isLeft, isRight, isUp, isSpace;
+ // boolean  = true;
+  int visiTimer = -1;
 
   Ship(float _x, float _y) {
     location = new PVector(_x, _y);
@@ -44,7 +47,8 @@ class Ship {
       flameVertices[i].rotate(1.5 * PI);
     }
 
-    playerColor = color(0, 255, 255);
+    defaultColor = color(0, 255, 255);
+    playerColor = defaultColor;
 
     setRelative(false);
   }
@@ -79,8 +83,16 @@ class Ship {
     acceleration.mult(0);
 
     //INVINCIVILITY
+    if (millis() > visiTimer + 500) {
+      if (playerColor == defaultColor) {
+        playerColor = color(0, 0);
+      } else {
+        playerColor = defaultColor;
+      }
+    }
+    
     if (invincible) {
-      playerColor = color(255, 200, 0);
+      //playerColor = color(255, 200, 0);
       //playerColor = color(255, 0, 0);
       if (millis() > invTimer + invDuration) {
         invincible = false;
@@ -184,6 +196,12 @@ class Ship {
       force.setMag(- velocity.mag());
     }
     applyForce(force);
+  }
+  
+  void turnInvincible() {
+    invincible = true;
+    invTimer = millis();
+    visiTimer = millis();
   }
 
   boolean setMove(int k, boolean b) { //"switch" is similar to the "else if" structure 

@@ -31,8 +31,6 @@ class Hud {
     }
     rect(5, hudHeight / 2, width/2 - 5, hudHeight / 2 - 5);
 
-
-
     noStroke();
     if (!ship.overheat) {
       fill(ship.playerColor);
@@ -84,19 +82,26 @@ void setupMenu() {
   state = 0;
   asteroids = new ArrayList();
   spawnAsteroidsRandom();
-  ship = new Ship(width / 2 - 80, height / 2 + 14);
-  ship.playerColor = 255;
-  ship.setRelative(true);
-  for (int i = 0; i < ship.vertices.length; i++) {
-    ship.vertices[i].rotate(0.5 * PI);
-    //ship.vertices[i].mult(0.8);
-  }
-
-  ship.setRelative(false);
+  setCursor();
 }
 
 void spawnAsteroidsRandom() {
   for (int i = 0; i < 10; i++) {
     asteroids.add(new Asteroid(random(width), random(height), int(random(1, 4))));
   }
+}
+
+void setCursor() {
+  if (playerMode == 1) {
+    ship = new Ship(width / 2 - 80, height / 2 + 14);
+  } else {
+    ship = new Ship(width / 2 - 80, height / 2 + 54);
+  }
+  ship.playerColor = 255;
+  ship.setRelative(true);
+  for (int i = 0; i < ship.vertices.length; i++) {
+    ship.vertices[i].rotate(0.5 * PI);
+    //ship.vertices[i].mult(0.8);
+  }
+  ship.setRelative(false);
 }

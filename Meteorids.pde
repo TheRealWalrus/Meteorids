@@ -1,11 +1,11 @@
 //TO DO:
 
-//main menu
+//to add "HEAT:" to UI
+//"flashing ship" invincibility effect improvements needed!!!
 
 //sounds
 //multiplayer
-//ui improvements
-//improve particle effects
+//decelerating particles
 
 int state;
 int lives;
@@ -76,21 +76,21 @@ void runGame() {
     ship.display();
     ship.update();
   }  
-  
-    //  if (alien.isAlive) {
-    //  if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
-    //    alien.isAlive = false;
-    //    score += alien.scoreValue;
-    //    int expType;
-    //    if (alien.isBig) {
-    //      expType = 1;
-    //    } else {
-    //      expType = 2;
-    //    }
-    //    explosion(alien.location, expType);
-    //  }
-    //}
-  
+
+  //  if (alien.isAlive) {
+  //  if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
+  //    alien.isAlive = false;
+  //    score += alien.scoreValue;
+  //    int expType;
+  //    if (alien.isBig) {
+  //      expType = 1;
+  //    } else {
+  //      expType = 2;
+  //    }
+  //    explosion(alien.location, expType);
+  //  }
+  //}
+
   if (alien.isAlive && ship.isAlive) {
     if (polyPoly(alien.verticesAbs, ship.vertices)) {
       if (alien.isBig) {
@@ -255,21 +255,33 @@ void keyPressed() {
   if (state == 2) {
     setupMenu();
   } else if (state == 0) {
-    setupGame();
-  }
-  
-  ship.setMove(keyCode, true);
-
-  //NEXT LEVEL CHEAT
-  if (keyCode == 67) { // "C" KEY
-    for (int i = asteroids.size() - 1; i >= 0; i--) {
-      asteroids.remove(i);
+    if (keyCode == UP || keyCode == DOWN) {
+      if (playerMode == 1) {
+        playerMode = 2;
+        setCursor();
+      } else if (playerMode == 2) {
+        playerMode = 1;
+        setCursor();
+      }
     }
-  }
+    if (keyCode == ENTER || keyCode == CONTROL) {
+      setupGame();
+    }
+  } else {
 
-  //SPAWN ALIEN
-  if (keyCode == 65) { // "A" KEY
-    spawnAlien();
+    ship.setMove(keyCode, true);
+
+    //NEXT LEVEL CHEAT
+    if (keyCode == 67) { // "C" KEY
+      for (int i = asteroids.size() - 1; i >= 0; i--) {
+        asteroids.remove(i);
+      }
+    }
+
+    //SPAWN ALIEN
+    if (keyCode == 65) { // "A" KEY
+      spawnAlien();
+    }
   }
 }
 
@@ -284,8 +296,7 @@ void checkPlayerRespawn() {
 
   if (playerRespawnTimer >= 0 && millis() > playerRespawnTimer + 3000) {
     ship = new Ship(width / 2, height / 2);
-    ship.invincible = true;
-    ship.invTimer = millis();
+    ship.turnInvincible();
     playerRespawnTimer = -1;
   }
 }
