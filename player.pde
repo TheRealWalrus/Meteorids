@@ -19,8 +19,8 @@ class Ship {
   int invDuration = 2000;
   boolean isAlive = true;
   boolean isLeft, isRight, isUp, isSpace;
- // boolean  = true;
-  int visiTimer = -1;
+  boolean visible = true;
+  int visiTimer;
 
   Ship(float _x, float _y) {
     location = new PVector(_x, _y);
@@ -54,51 +54,50 @@ class Ship {
   }
 
   void display() {
-    noFill();
+    if (visible) {
+      noFill();
 
-    //Afterburner
-    if (isUp) {
-      if (int(random(2)) == 1) {
-        stroke(playerColor);
-      } else {
-        noStroke();
+      //Afterburner
+      if (isUp) {
+        if (int(random(2)) == 1) {
+          stroke(playerColor);
+        } else {
+          noStroke();
+        }
+        beginShape();
+        for (int i = 0; i < flameVertices.length; i++) {
+          vertex(flameVertices[i].x, flameVertices[i].y);
+        }
+        endShape(CLOSE);
       }
+
+      fill(0);
+      stroke(playerColor);
       beginShape();
-      for (int i = 0; i < flameVertices.length; i++) {
-        vertex(flameVertices[i].x, flameVertices[i].y);
+      for (int i = 0; i < vertices.length; i++) {
+        vertex(vertices[i].x, vertices[i].y);
       }
       endShape(CLOSE);
     }
-
-    fill(0);
-    stroke(playerColor);
-    beginShape();
-    for (int i = 0; i < vertices.length; i++) {
-      vertex(vertices[i].x, vertices[i].y);
-    }
-    endShape(CLOSE);
   }
 
   void update() {
     acceleration.mult(0);
 
     //INVINCIVILITY
-    if (millis() > visiTimer + 500) {
-      if (playerColor == defaultColor) {
-        playerColor = color(0, 0);
-      } else {
-        playerColor = defaultColor;
-      }
-    }
-    
+
     if (invincible) {
       //playerColor = color(255, 200, 0);
       //playerColor = color(255, 0, 0);
+      if (millis() > visiTimer + 100) {
+        visible = !visible;
+        visiTimer = millis();
+      }
       if (millis() > invTimer + invDuration) {
         invincible = false;
       }
     } else {
-      playerColor = color(0, 255, 255);
+      visible = true;
     }
 
     setRelative(true);
@@ -119,12 +118,13 @@ class Ship {
       applyForce(thrust);
     }
 
-    //SHOOOT
+    //SHOOT
     if (isSpace && (millis() - weaponTimer > 200) && !overheat) {
       PVector origo = PVector.add(location, vertices[0]);
       playerProjectiles.add(new PlayerProjectile(origo, velocity, vertices[0]));
       weaponTimer = millis();
       heat += 18;
+      //playerShootSound.play();
     }
 
 
@@ -197,7 +197,7 @@ class Ship {
     }
     applyForce(force);
   }
-  
+
   void turnInvincible() {
     invincible = true;
     invTimer = millis();

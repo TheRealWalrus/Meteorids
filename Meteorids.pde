@@ -1,11 +1,14 @@
 //TO DO:
 
-//to add "HEAT:" to UI
-//"flashing ship" invincibility effect improvements needed!!!
-
-//sounds
+//sounds !!! partially implemented, further research needed
+//game over screen improvements
 //multiplayer
+//fullscreen
 //decelerating particles
+
+import processing.sound.*;
+
+SoundFile playerShootSound;
 
 int state;
 int lives;
@@ -34,6 +37,9 @@ int playerMode = 1;
 
 void setup() {
   size(853, 480);
+
+  //playerShootSound = new SoundFile(this, "data/143609__d-w__weapons-synth-blast-03.wav");
+  
   fontMain = loadFont("OCRAExtended-48.vlw");
   textFont(fontMain);
   setupMenu();

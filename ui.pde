@@ -23,13 +23,18 @@ class Hud {
     textSize(20);
     text("SCORE: " + score, width - 165, 20);
 
+    textSize(20);
+    text("HEAT: ", 5, 45);
+
     noFill();
     if (!ship.overheat) {
       stroke(ship.playerColor);
     } else {
       stroke(255);
     }
-    rect(5, hudHeight / 2, width/2 - 5, hudHeight / 2 - 5);
+
+    int heatBarStartX = 70;
+    rect(heatBarStartX, hudHeight / 2, width/2 - heatBarStartX - 5, hudHeight / 2 - 5);
 
     noStroke();
     if (!ship.overheat) {
@@ -37,7 +42,8 @@ class Hud {
     } else {
       fill(255);
     }
-    rect(5, hudHeight / 2, map(ship.heat, 0, 100, 0, width/2 - 5), hudHeight / 2 - 5);
+
+    rect(heatBarStartX, hudHeight / 2, map(ship.heat, 0, 100, 0, width/2 - heatBarStartX - 5), hudHeight / 2 - 5);
 
     //PLAYER 2 HEAT BAR
     //fill(255, 255, 0);
