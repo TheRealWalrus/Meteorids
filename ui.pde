@@ -99,9 +99,9 @@ void spawnAsteroidsRandom() {
 
 void setCursor() {
   if (playerMode == 1) {
-    ship = new Ship(width / 2 - 80, height / 2 + 14);
+    ship = new Ship(width / 2 - 80, height / 2 + 14, 1);
   } else {
-    ship = new Ship(width / 2 - 80, height / 2 + 54);
+    ship = new Ship(width / 2 - 80, height / 2 + 54, 1);
   }
   ship.playerColor = 255;
   ship.setRelative(true);

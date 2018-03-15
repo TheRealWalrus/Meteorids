@@ -10,6 +10,8 @@ import processing.sound.*;
 
 SoundFile playerShootSound;
 
+boolean isLeft, isRight, isUp, isCtrl, isW, isS, isA, isD, isF;
+
 int state;
 int lives;
 int level;
@@ -27,6 +29,7 @@ ArrayList<PlayerProjectile> playerProjectiles;
 ArrayList<AlienProjectile> alienProjectiles;
 ArrayList<Asteroid> asteroids;
 ArrayList<Partickle> partickles;
+ArrayList<Ship> players;
 
 PFont fontMain;
 int hudHeight = 55;
@@ -39,7 +42,7 @@ void setup() {
   size(853, 480);
 
   //playerShootSound = new SoundFile(this, "data/143609__d-w__weapons-synth-blast-03.wav");
-  
+
   fontMain = loadFont("OCRAExtended-48.vlw");
   textFont(fontMain);
   setupMenu();
@@ -55,15 +58,23 @@ void setupGame() {
   endGameTimer = -1;
   alienCounter = 0;
 
-  ship = new Ship(width / 2, height / 2);
+  //ship = new Ship(width / 2, height / 2, 2);
   hud = new Hud();
   playerProjectiles = new ArrayList();
   alienProjectiles = new ArrayList();
   asteroids = new ArrayList();
   partickles = new ArrayList();
+  players = new ArrayList();
   alien = new Alien(width / 2, height / 2, true);
   alien.isAlive = false;
   spawnAsteroids();
+
+  if (playerMode == 1) {
+    players.add(new Ship(width / 2, height / 2, 1));
+  } else {
+    players.add(new Ship(width / 3, height / 2, 1));
+    players.add(new Ship(width / 3 * 2, height / 2, 2));
+  }
 }
 
 void draw() {
@@ -78,10 +89,27 @@ void draw() {
 }
 
 void runGame() {
-  if (ship.isAlive) {
-    ship.display();
-    ship.update();
-  }  
+  //if (ship.isAlive) {
+  //  ship.display();
+  //  ship.update();
+  //}
+
+  for (Ship part : players) {
+    part.display();
+    part.update();
+
+    if (alien.isAlive) {
+      if (polyPoly(alien.verticesAbs, part.vertices)) {
+        if (alien.isBig) {
+          alien.isAlive = false;
+          explosion(part.location, 1);
+        }
+        part.isAlive = false;
+        explosion(part.location, 4);
+        lives--;
+      }
+    }
+  }
 
   //  if (alien.isAlive) {
   //  if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
@@ -97,17 +125,17 @@ void runGame() {
   //  }
   //}
 
-  if (alien.isAlive && ship.isAlive) {
-    if (polyPoly(alien.verticesAbs, ship.vertices)) {
-      if (alien.isBig) {
-        alien.isAlive = false;
-        explosion(ship.location, 1);
-      }
-      ship.isAlive = false;
-      explosion(ship.location, 4);
-      lives--;
-    }
-  }
+  //if (alien.isAlive && ship.isAlive) {
+  //  if (polyPoly(alien.verticesAbs, ship.vertices)) {
+  //    if (alien.isBig) {
+  //      alien.isAlive = false;
+  //      explosion(ship.location, 1);
+  //    }
+  //    ship.isAlive = false;
+  //    explosion(ship.location, 4);
+  //    lives--;
+  //  }
+  //}
 
   for (AlienProjectile bullet : alienProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
     bullet.display();
@@ -227,6 +255,14 @@ void runGame() {
       partickles.remove(i);
     }
   }
+
+  for (int i = players.size() - 1; i >= 0; i--) {
+    Ship part = players.get(i);
+    if (!part.isAlive) {
+      players.remove(i);
+    }
+  }
+
   hud.drawHud();
   checkPlayerRespawn();
   checkAlienSpawn();
@@ -275,7 +311,7 @@ void keyPressed() {
     }
   } else {
 
-    ship.setMove(keyCode, true);
+    setMove(keyCode, true);
 
     //NEXT LEVEL CHEAT
     if (keyCode == 67) { // "C" KEY
@@ -285,14 +321,45 @@ void keyPressed() {
     }
 
     //SPAWN ALIEN
-    if (keyCode == 65) { // "A" KEY
+    if (keyCode == 73) { // "I" KEY
       spawnAlien();
     }
   }
 }
 
 void keyReleased() {
-  ship.setMove(keyCode, false);
+  setMove(keyCode, false);
+}
+
+boolean setMove(int k, boolean b) { //"switch" is similar to the "else if" structure 
+  switch (k) {
+  case UP:
+    return isUp = b;
+
+  case LEFT:
+    return isLeft = b;
+
+  case RIGHT:
+    return isRight = b;
+
+  case CONTROL:
+    return isCtrl = b;
+
+  case 87:
+    return isW = b;
+
+  case 65:
+    return isA = b;
+
+  case 68:
+    return isD = b;
+
+  case 70:
+    return isF = b;
+
+  default:
+    return b;
+  }
 }
 
 void checkPlayerRespawn() {
@@ -301,7 +368,7 @@ void checkPlayerRespawn() {
   }
 
   if (playerRespawnTimer >= 0 && millis() > playerRespawnTimer + 3000) {
-    ship = new Ship(width / 2, height / 2);
+    ship = new Ship(width / 2, height / 2, 1);
     ship.turnInvincible();
     playerRespawnTimer = -1;
   }

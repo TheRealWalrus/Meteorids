@@ -6,6 +6,7 @@ class Ship {
   PVector[] vertices;
   PVector[] flameVertices;
 
+  boolean shipUp, shipLeft, shipRight, shipFire;
 
   float angVel = 0.1;
   int weaponTimer = 0;
@@ -13,16 +14,22 @@ class Ship {
   boolean overheat = false;
   float cooldown = 1;
   color playerColor;
-  color defaultColor;
   float invTimer;
   boolean invincible = false;
   int invDuration = 2000;
   boolean isAlive = true;
-  boolean isLeft, isRight, isUp, isSpace;
   boolean visible = true;
   int visiTimer;
+  int player;
 
-  Ship(float _x, float _y) {
+  Ship(float _x, float _y, int _player) {
+    player = _player;
+    if (_player == 1) {
+      playerColor = color(0, 255, 255);
+    } else {
+      playerColor = color(255, 200, 0);
+    }
+    
     location = new PVector(_x, _y);
     velocity = new PVector(0, 0);
     acceleration = new PVector(0, 0);
@@ -46,10 +53,7 @@ class Ship {
     for (int i = 0; i < flameVertices.length; i++) {
       flameVertices[i].rotate(1.5 * PI);
     }
-
-    defaultColor = color(0, 255, 255);
-    playerColor = defaultColor;
-
+    
     setRelative(false);
   }
 
@@ -58,7 +62,7 @@ class Ship {
       noFill();
 
       //Afterburner
-      if (isUp) {
+      if (shipUp) {
         if (int(random(2)) == 1) {
           stroke(playerColor);
         } else {
@@ -82,13 +86,22 @@ class Ship {
   }
 
   void update() {
+    if (player == 1) {
+      shipUp = isUp;
+      shipLeft = isLeft;
+      shipRight = isRight;
+      shipFire = isCtrl;
+    } else {
+      shipUp = isW;
+      shipLeft = isA;
+      shipRight = isD;
+      shipFire = isF;
+    }
+    
     acceleration.mult(0);
 
     //INVINCIVILITY
-
     if (invincible) {
-      //playerColor = color(255, 200, 0);
-      //playerColor = color(255, 0, 0);
       if (millis() > visiTimer + 100) {
         visible = !visible;
         visiTimer = millis();
@@ -104,22 +117,21 @@ class Ship {
 
     //TURNING
     for (int i = 0; i < vertices.length; i++) {
-      vertices[i].rotate(angVel * (int(isRight) - int(isLeft)));
+      vertices[i].rotate(angVel * (int(shipRight) - int(shipLeft)));
     }
     for (int i = 0; i < flameVertices.length; i++) {
-      flameVertices[i].rotate(angVel * (int(isRight) - int(isLeft)));
+      flameVertices[i].rotate(angVel * (int(shipRight) - int(shipLeft)));
     }
 
     //THRUST
-    if (isUp) {
+    if (shipUp) {
       PVector thrust = vertices[0].copy();
-      //PVector thrust = new PVector(1, 0);
       thrust.setMag(0.06);
       applyForce(thrust);
     }
 
     //SHOOT
-    if (isSpace && (millis() - weaponTimer > 200) && !overheat) {
+    if (shipFire && (millis() - weaponTimer > 200) && !overheat) {
       PVector origo = PVector.add(location, vertices[0]);
       playerProjectiles.add(new PlayerProjectile(origo, velocity, vertices[0]));
       weaponTimer = millis();
@@ -204,24 +216,7 @@ class Ship {
     visiTimer = millis();
   }
 
-  boolean setMove(int k, boolean b) { //"switch" is similar to the "else if" structure 
-    switch (k) {
-    case UP:
-      return isUp = b;
 
-    case LEFT:
-      return isLeft = b;
-
-    case RIGHT:
-      return isRight = b;
-
-    case CONTROL:
-      return isSpace = b;
-
-    default:
-      return b;
-    }
-  }
 }
 
 class PlayerProjectile {
