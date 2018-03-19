@@ -220,7 +220,7 @@ void runGame() {
 
     //SHIP COLLISION
     for (Ship partShip : players) {
-      if (partShip.isAlive && !ship.invincible) {
+      if (partShip.isAlive && !partShip.invincible) {
         if (polyCircle(partShip.vertices, part.location, part.r)) {
           playerDies(partShip);
           //ENHANCED LOOP NEEDS TO BE REPLACEDű??
@@ -394,14 +394,20 @@ void checkPlayerRespawn() {
   //  playerRespawnTimer = millis();
   //}
   if (player1RespawnTimer >= 0 && millis() > player1RespawnTimer + 3000) {
-    players.set(0, new Ship(width / 2, height / 2, 1));
-    ship.turnInvincible();
+    if (playerMode == 1) {
+      players.set(0, new Ship(width / 2, height / 2, 1));
+    } else {
+      players.set(0, new Ship(width / 3, height / 2, 1));
+    }
+    Ship part = players.get(0);
+    part.turnInvincible();
     player1RespawnTimer = -1;
   }
 
   if (player2RespawnTimer >= 0 && millis() > player2RespawnTimer + 3000) {
-    ship = new Ship(width / 2, height / 2, 2);
-    ship.turnInvincible();
+    players.set(1, new Ship(width / 3 * 2, height / 2, 2));
+    Ship part = players.get(1);
+    part.turnInvincible();
     player2RespawnTimer = -1;
   }
 }
