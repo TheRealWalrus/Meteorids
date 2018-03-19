@@ -17,7 +17,8 @@ int lives;
 int level;
 int score;
 int nextLevelTimer;
-int playerRespawnTimer;
+int player1RespawnTimer;
+int player2RespawnTimer;
 int endGameTimer;
 int alienCounter;
 
@@ -54,7 +55,8 @@ void setupGame() {
   level = 1;
   score = 0;
   nextLevelTimer = -1;
-  playerRespawnTimer = -1;
+  player1RespawnTimer = -1;
+  player2RespawnTimer = -1;
   endGameTimer = -1;
   alienCounter = 0;
 
@@ -88,6 +90,17 @@ void draw() {
   }
 }
 
+void playerDies(Ship player) {
+  player.isAlive = false;
+  explosion(player.location, 4);
+  lives--;
+  if (player.player == 1) {
+    player1RespawnTimer = millis();
+  } else {
+    player2RespawnTimer = millis();
+  }
+}
+
 void runGame() {
   //if (ship.isAlive) {
   //  ship.display();
@@ -95,18 +108,18 @@ void runGame() {
   //}
 
   for (Ship part : players) {
-    part.display();
-    part.update();
+    if (part.isAlive) {
+      part.display();
+      part.update();
+    }
 
-    if (alien.isAlive) {
+    if (alien.isAlive && part.isAlive) {
       if (polyPoly(alien.verticesAbs, part.vertices)) {
         if (alien.isBig) {
           alien.isAlive = false;
           explosion(part.location, 1);
         }
-        part.isAlive = false;
-        explosion(part.location, 4);
-        lives--;
+        playerDies(part);
       }
     }
   }
@@ -153,11 +166,11 @@ void runGame() {
       }
     }
     //PLAYER IS HIT
-    if (ship.isAlive && !ship.invincible) {
-      if (polyLine(ship.vertices, bullet.location, bullet.lastLoc)) {
-        ship.isAlive = false;
-        lives--;
-        explosion(ship.location, 4);
+    for (Ship part : players) {
+      if (part.isAlive && !part.invincible) {
+        if (polyLine(part.vertices, bullet.location, bullet.lastLoc)) {
+          playerDies(part);
+        }
       }
     }
   }
@@ -206,18 +219,19 @@ void runGame() {
     part.update();
 
     //SHIP COLLISION
-    if (ship.isAlive && !ship.invincible) {
-      if (polyCircle(ship.vertices, part.location, part.r)) {
-        ship.isAlive = false;
-        lives--;
-        //ENHANCED LOOP NEEDS TO BE REPLACED
-        if (part.type < 3) {
-          asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
-          asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
+    for (Ship partShip : players) {
+      if (partShip.isAlive && !ship.invincible) {
+        if (polyCircle(partShip.vertices, part.location, part.r)) {
+          playerDies(partShip);
+          //ENHANCED LOOP NEEDS TO BE REPLACEDű??
+          part.isFinished = true;
+          explosion(part.location, part.type);
+          explosion(partShip.location, 4);
+          if (part.type < 3) {
+            asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
+            asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
+          }
         }
-        part.isFinished = true;
-        explosion(part.location, part.type);
-        explosion(ship.location, 4);
       }
     }
   }
@@ -256,15 +270,16 @@ void runGame() {
     }
   }
 
-  for (int i = players.size() - 1; i >= 0; i--) {
-    Ship part = players.get(i);
-    if (!part.isAlive) {
-      players.remove(i);
-    }
-  }
+  //for (int i = players.size() - 1; i >= 0; i--) {
+  //  Ship part = players.get(i);
+  //  if (!part.isAlive) {
+  //    players.remove(i);
+  //  }
+  //}
 
   hud.drawHud();
   checkPlayerRespawn();
+  //println(player1RespawnTimer);
   checkAlienSpawn();
   checkNextLevel();
   checkEndGame();
@@ -362,15 +377,32 @@ boolean setMove(int k, boolean b) { //"switch" is similar to the "else if" struc
   }
 }
 
+//void checkPlayerRespawn() {
+//  if (!ship.isAlive && playerRespawnTimer < 0) {
+//    playerRespawnTimer = millis();
+//  }
+
+//  if (playerRespawnTimer >= 0 && millis() > playerRespawnTimer + 3000) {
+//    ship = new Ship(width / 2, height / 2, 1);
+//    ship.turnInvincible();
+//    playerRespawnTimer = -1;
+//  }
+//}
+
 void checkPlayerRespawn() {
-  if (!ship.isAlive && playerRespawnTimer < 0) {
-    playerRespawnTimer = millis();
+  //if (!ship.isAlive && playerRespawnTimer < 0) {
+  //  playerRespawnTimer = millis();
+  //}
+  if (player1RespawnTimer >= 0 && millis() > player1RespawnTimer + 3000) {
+    players.set(0, new Ship(width / 2, height / 2, 1));
+    ship.turnInvincible();
+    player1RespawnTimer = -1;
   }
 
-  if (playerRespawnTimer >= 0 && millis() > playerRespawnTimer + 3000) {
-    ship = new Ship(width / 2, height / 2, 1);
+  if (player2RespawnTimer >= 0 && millis() > player2RespawnTimer + 3000) {
+    ship = new Ship(width / 2, height / 2, 2);
     ship.turnInvincible();
-    playerRespawnTimer = -1;
+    player2RespawnTimer = -1;
   }
 }
 
