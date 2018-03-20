@@ -133,7 +133,7 @@ class Ship {
     //SHOOT
     if (shipFire && (millis() - weaponTimer > 200) && !overheat) {
       PVector origo = PVector.add(location, vertices[0]);
-      playerProjectiles.add(new PlayerProjectile(origo, velocity, vertices[0]));
+      playerProjectiles.add(new PlayerProjectile(origo, velocity, vertices[0], playerColor));
       weaponTimer = millis();
       heat += 18;
       //playerShootSound.play();
@@ -225,9 +225,11 @@ class PlayerProjectile {
   PVector velocity;
   boolean isFinished = false;
   int timer;
+  color pColor;
   //PVector lastLoc;
 
-  PlayerProjectile(PVector _location, PVector _shipVel, PVector _dir) {
+  PlayerProjectile(PVector _location, PVector _shipVel, PVector _dir, color _pColor) {
+    pColor = _pColor;
     lastLoc = _location.copy();
     location = _location.copy();
     velocity = _dir.copy();
@@ -244,7 +246,7 @@ class PlayerProjectile {
     //fill(ship.playerColor);
     //ellipse(location.x, location.y, 2, 2);
 
-    stroke(ship.playerColor);
+    stroke(pColor);
     line(lastLoc.x, lastLoc.y, location.x, location.y);
   }
 

@@ -223,10 +223,9 @@ void runGame() {
       if (partShip.isAlive && !partShip.invincible) {
         if (polyCircle(partShip.vertices, part.location, part.r)) {
           playerDies(partShip);
-          //ENHANCED LOOP NEEDS TO BE REPLACEDű??
+          //ENHANCED LOOP NEEDS TO BE REPLACED??
           part.isFinished = true;
           explosion(part.location, part.type);
-          explosion(partShip.location, 4);
           if (part.type < 3) {
             asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
             asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
