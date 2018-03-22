@@ -26,26 +26,53 @@ class Hud {
     textSize(20);
     text("HEAT: ", 5, 45);
 
+    //PLAYER 1 HEAT BAR
     noFill();
-    if (!ship.overheat) {
-      stroke(ship.playerColor);
+    color bar1Color = players.get(0).playerColor;
+    if (!players.get(0).overheat) {
+      stroke(bar1Color);
     } else {
       stroke(255);
     }
 
     int heatBarStartX = 70;
-    rect(heatBarStartX, hudHeight / 2, width/2 - heatBarStartX - 5, hudHeight / 2 - 5);
+    int heatBarLength = width/2 - heatBarStartX - 5;
+    rect(heatBarStartX, hudHeight / 2, heatBarLength, hudHeight / 2 - 5);
 
     noStroke();
-    if (!ship.overheat) {
-      fill(ship.playerColor);
+    if (!players.get(0).overheat) {
+      fill(bar1Color);
     } else {
       fill(255);
     }
 
-    rect(heatBarStartX, hudHeight / 2, map(ship.heat, 0, 100, 0, width/2 - heatBarStartX - 5), hudHeight / 2 - 5);
+    rect(heatBarStartX, hudHeight / 2, map(players.get(0).heat, 0, 100, 0, heatBarLength), hudHeight / 2 - 5);
 
     //PLAYER 2 HEAT BAR
+    if (playerMode == 2) {
+      noFill();
+      color bar2Color = players.get(1).playerColor;
+      if (!players.get(1).overheat) {
+        stroke(bar2Color);
+      } else {
+        stroke(255);
+      }
+
+      heatBarStartX = width - heatBarLength - 5;
+      rect(heatBarStartX, hudHeight / 2, heatBarLength, hudHeight / 2 - 5);
+
+      noStroke();
+      if (!players.get(1).overheat) {
+        fill(bar2Color);
+      } else {
+        fill(255);
+      }
+
+      rect(heatBarStartX, hudHeight / 2, map(players.get(1).heat, 0, 100, 0, heatBarLength), hudHeight / 2 - 5);
+    }
+
+
+
     //fill(255, 255, 0);
     //rect(width / 2 + 5, hudHeight / 2, 300, hudHeight / 2 - 5);
 
@@ -56,11 +83,15 @@ class Hud {
 
 void endGameScreen() {
   fill(255);
+  
   textSize(40);
-  text("FINAL SCORE: " + score, width / 2 - 200, height / 2 - 30);
+  text("GAME OVER", width / 2 - 120, height / 2 - 40);
+  
+  textSize(15);
+  text("SCORE: " + score, width / 2 - 80, height / 2 + 10);
 
   textSize(15);
-  text("PRESS ANY KEY TO CONTINUE", width / 2 - 180, height / 2 + 30);
+  text("PRESS ANY KEY TO CONTINUE", width / 2 - 120, height / 2 + 120);
 }
 
 void mainMenu() {

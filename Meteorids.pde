@@ -1,9 +1,13 @@
 //TO DO:
 
+//loose conditions to be revised
+//1up every at every 10 000 points
+//fixing ctrl w
+//alien aim
 //sounds !!! partially implemented, further research needed
-//game over screen improvements
-//multiplayer
+
 //fullscreen
+
 //decelerating particles
 
 import processing.sound.*;
@@ -92,7 +96,7 @@ void draw() {
 
 void playerDies(Ship player) {
   player.isAlive = false;
-  explosion(player.location, 4);
+  explosion(player.location, 4, player.playerColor);
   lives--;
   if (player.player == 1) {
     player1RespawnTimer = millis();
@@ -117,7 +121,7 @@ void runGame() {
       if (polyPoly(alien.verticesAbs, part.vertices)) {
         if (alien.isBig) {
           alien.isAlive = false;
-          explosion(part.location, 1);
+          explosion(part.location, 1, 255);
         }
         playerDies(part);
       }
@@ -162,7 +166,7 @@ void runGame() {
         }
         target.isFinished = true;
         bullet.isFinished = true;
-        explosion(target.location, target.type);
+        explosion(target.location, target.type, 255);
       }
     }
     //PLAYER IS HIT
@@ -194,7 +198,7 @@ void runGame() {
         }
         target.isFinished = true;
         bullet.isFinished = true;
-        explosion(target.location, target.type);
+        explosion(target.location, target.type, 255);
       }
     }
     // ALIEN HIT DETECTION
@@ -208,7 +212,7 @@ void runGame() {
         } else {
           expType = 2;
         }
-        explosion(alien.location, expType);
+        explosion(alien.location, expType, 255);
       }
     }
   }
@@ -225,7 +229,7 @@ void runGame() {
           playerDies(partShip);
           //ENHANCED LOOP NEEDS TO BE REPLACED??
           part.isFinished = true;
-          explosion(part.location, part.type);
+          explosion(part.location, part.type, 255);
           if (part.type < 3) {
             asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
             asteroids.add(new Asteroid(part.location.x, part.location.y, part.type + 1));
@@ -440,7 +444,7 @@ void checkNextLevel() {
   }
 }
 
-void explosion(PVector _location, int _type) {
+void explosion(PVector _location, int _type, color _color) {
   int minPartickles;
   int maxPartickles;
 
@@ -459,7 +463,7 @@ void explosion(PVector _location, int _type) {
   }
 
   for (int k = 0; k < int(random(minPartickles, maxPartickles + 1)); k++) {
-    partickles.add(new Partickle(_location, _type));
+    partickles.add(new Partickle(_location, _type, _color));
   }
 }
 
@@ -473,13 +477,15 @@ class Partickle {
   float angVel = random(0.2);
   float theta;
   int type;
+  color pColor;
 
-  Partickle(PVector _location, int _type) {
+  Partickle(PVector _location, int _type, color _color) {
     location = _location.copy();
     velocity = PVector.fromAngle(random(2 * PI));
     velocity.mult(random(1, 3));
     timer = millis();
     type = _type;
+    pColor = _color;
 
     if (_type == 1) {
       duration = 500;
@@ -497,13 +503,13 @@ class Partickle {
   void display() {
     if (type < 4) {
       noStroke();
-      fill(255);
+      fill(pColor);
       ellipse(location.x, location.y, 2, 2);
     } else {
       pushMatrix();
 
-      stroke(ship.playerColor);
-      fill(255, 0, 0);
+      stroke(pColor);
+      //fill(255, 0, 0);
       translate(location.x, location.y);
       rotate(theta);
       //ellipse(0, 0, 5, 5);
