@@ -70,14 +70,6 @@ class Hud {
 
       rect(heatBarStartX, hudHeight / 2, map(players.get(1).heat, 0, 100, 0, heatBarLength), hudHeight / 2 - 5);
     }
-
-
-
-    //fill(255, 255, 0);
-    //rect(width / 2 + 5, hudHeight / 2, 300, hudHeight / 2 - 5);
-
-    //stroke(255, 255, 0);
-    //rect(width / 2 + 5, hudHeight / 2, width / 2 - 10, hudHeight / 2 - 5);
   }
 }
 
@@ -138,7 +130,6 @@ void setCursor() {
   ship.setRelative(true);
   for (int i = 0; i < ship.vertices.length; i++) {
     ship.vertices[i].rotate(0.5 * PI);
-    //ship.vertices[i].mult(0.8);
   }
   ship.setRelative(false);
 }

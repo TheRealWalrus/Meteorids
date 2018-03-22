@@ -1,8 +1,6 @@
 //TO DO:
 
-//loose conditions to be revised
 //1up every at every 10 000 points
-//fixing ctrl w
 //alien aim
 //sounds !!! partially implemented, further research needed
 
@@ -64,7 +62,6 @@ void setupGame() {
   endGameTimer = -1;
   alienCounter = 0;
 
-  //ship = new Ship(width / 2, height / 2, 2);
   hud = new Hud();
   playerProjectiles = new ArrayList();
   alienProjectiles = new ArrayList();
@@ -97,20 +94,43 @@ void draw() {
 void playerDies(Ship player) {
   player.isAlive = false;
   explosion(player.location, 4, player.playerColor);
-  lives--;
-  if (player.player == 1) {
-    player1RespawnTimer = millis();
+  if (lives > 0) {
+    if (player.player == 1) {
+      player1RespawnTimer = millis();
+    } else {
+      player2RespawnTimer = millis();
+    }
+    lives--;
+  }
+}
+
+boolean allPlayersDead() {
+  if (playerMode == 1) {
+    if (players.get(0).isAlive) {
+      return false;
+    } else {
+      return true;
+    }
   } else {
-    player2RespawnTimer = millis();
+    if (players.get(0).isAlive == false && players.get(1).isAlive == false) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+void checkEndGame() {
+  if (allPlayersDead() && 0 > endGameTimer && player1RespawnTimer == -1 && player2RespawnTimer == -1) {
+    endGameTimer = millis();
+  }
+
+  if (endGameTimer >= 0 && millis() > endGameTimer + 3000) {
+    state = 2;
   }
 }
 
 void runGame() {
-  //if (ship.isAlive) {
-  //  ship.display();
-  //  ship.update();
-  //}
-
   for (Ship part : players) {
     if (part.isAlive) {
       part.display();
@@ -127,32 +147,6 @@ void runGame() {
       }
     }
   }
-
-  //  if (alien.isAlive) {
-  //  if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
-  //    alien.isAlive = false;
-  //    score += alien.scoreValue;
-  //    int expType;
-  //    if (alien.isBig) {
-  //      expType = 1;
-  //    } else {
-  //      expType = 2;
-  //    }
-  //    explosion(alien.location, expType);
-  //  }
-  //}
-
-  //if (alien.isAlive && ship.isAlive) {
-  //  if (polyPoly(alien.verticesAbs, ship.vertices)) {
-  //    if (alien.isBig) {
-  //      alien.isAlive = false;
-  //      explosion(ship.location, 1);
-  //    }
-  //    ship.isAlive = false;
-  //    explosion(ship.location, 4);
-  //    lives--;
-  //  }
-  //}
 
   for (AlienProjectile bullet : alienProjectiles) { //Do not use enhanced loop if you want add or remove elements during the loop
     bullet.display();
@@ -273,42 +267,12 @@ void runGame() {
     }
   }
 
-  //for (int i = players.size() - 1; i >= 0; i--) {
-  //  Ship part = players.get(i);
-  //  if (!part.isAlive) {
-  //    players.remove(i);
-  //  }
-  //}
-
   hud.drawHud();
   checkPlayerRespawn();
   //println(player1RespawnTimer);
   checkAlienSpawn();
   checkNextLevel();
   checkEndGame();
-}
-
-//void checkPlayerRespawn() {
-//  if (!ship.isAlive && playerRespawnTimer < 0) {
-//    playerRespawnTimer = millis();
-//  }
-
-//  if (playerRespawnTimer >= 0 && millis() > playerRespawnTimer + 3000) {
-//    ship = new Ship(width / 2, height / 2);
-//    ship.invincible = true;
-//    ship.invTimer = millis();
-//    playerRespawnTimer = -1;
-//  }
-//}
-
-void checkEndGame() {
-  if (0 > lives && 0 > endGameTimer) {
-    endGameTimer = millis();
-  }
-
-  if (endGameTimer >= 0 && millis() > endGameTimer + 3000) {
-    state = 2;
-  }
 }
 
 void keyPressed() {
@@ -363,34 +327,22 @@ boolean setMove(int k, boolean b) { //"switch" is similar to the "else if" struc
   case CONTROL:
     return isCtrl = b;
 
-  case 87:
+  case 69:
     return isW = b;
 
-  case 65:
+  case 83:
     return isA = b;
 
-  case 68:
+  case 70:
     return isD = b;
 
-  case 70:
+  case 71:
     return isF = b;
 
   default:
     return b;
   }
 }
-
-//void checkPlayerRespawn() {
-//  if (!ship.isAlive && playerRespawnTimer < 0) {
-//    playerRespawnTimer = millis();
-//  }
-
-//  if (playerRespawnTimer >= 0 && millis() > playerRespawnTimer + 3000) {
-//    ship = new Ship(width / 2, height / 2, 1);
-//    ship.turnInvincible();
-//    playerRespawnTimer = -1;
-//  }
-//}
 
 void checkPlayerRespawn() {
   //if (!ship.isAlive && playerRespawnTimer < 0) {

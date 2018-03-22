@@ -166,7 +166,6 @@ class AlienProjectile {
   }
 
   boolean hits(Asteroid target) {
-    //return(pointCircle(location, target.location, target.r));
     return(lineCircle(location, lastLoc, target.location, target.r));
   }
 }

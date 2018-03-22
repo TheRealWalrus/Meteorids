@@ -139,7 +139,6 @@ class Ship {
       //playerShootSound.play();
     }
 
-
     heat -= cooldown;
     heat = constrain(heat, 0, 100);
 
@@ -215,8 +214,6 @@ class Ship {
     invTimer = millis();
     visiTimer = millis();
   }
-
-
 }
 
 class PlayerProjectile {
@@ -242,10 +239,6 @@ class PlayerProjectile {
   }
 
   void display() {
-    //noStroke();
-    //fill(ship.playerColor);
-    //ellipse(location.x, location.y, 2, 2);
-
     stroke(pColor);
     line(lastLoc.x, lastLoc.y, location.x, location.y);
   }
@@ -277,14 +270,6 @@ class PlayerProjectile {
   }
 
   boolean hits(Asteroid target) {
-    //return(pointCircle(location, target.location, target.r));
     return(lineCircle(location, lastLoc, target.location, target.r));
   }
-
-  //boolean hitsAlien() {
-  //  if (polyPoint(alien.vertexes, location.x, location.y)) {
-  //    return true;
-  //  }
-  //  return false;
-  //}
 }
