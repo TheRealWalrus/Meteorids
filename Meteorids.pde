@@ -1,11 +1,10 @@
 //TO DO:
 
-//sounds !!! partially implemented, further research needed
-//remove cheats
-//Enter to continue
+//sounds !!! partially implemented, further testing needed
 
 //fullscreen
 //decelerating particles
+//exit key
 
 import processing.sound.*;
 
@@ -284,14 +283,13 @@ void runGame() {
 
   hud.drawHud();
   checkPlayerRespawn();
-  //println(player1RespawnTimer);
   checkAlienSpawn();
   checkNextLevel();
   checkEndGame();
 }
 
 void keyPressed() {
-  if (state == 2) {
+  if (state == 2 && keyCode == ENTER) {
     setupMenu();
   } else if (state == 0) {
     if (keyCode == UP || keyCode == DOWN) {
@@ -307,20 +305,19 @@ void keyPressed() {
       setupGame();
     }
   } else {
-
     setMove(keyCode, true);
 
     //NEXT LEVEL CHEAT
-    if (keyCode == 67) { // "C" KEY
-      for (int i = asteroids.size() - 1; i >= 0; i--) {
-        asteroids.remove(i);
-      }
-    }
+    //if (keyCode == 67) { // "C" KEY
+    //  for (int i = asteroids.size() - 1; i >= 0; i--) {
+    //    asteroids.remove(i);
+    //  }
+    //}
 
     //SPAWN ALIEN
-    if (keyCode == 73) { // "I" KEY
-      spawnAlien();
-    }
+    //if (keyCode == 73) { // "I" KEY
+    //  spawnAlien();
+    //}
   }
 }
 
@@ -360,9 +357,6 @@ boolean setMove(int k, boolean b) { //"switch" is similar to the "else if" struc
 }
 
 void checkPlayerRespawn() {
-  //if (!ship.isAlive && playerRespawnTimer < 0) {
-  //  playerRespawnTimer = millis();
-  //}
   if (player1RespawnTimer >= 0 && millis() > player1RespawnTimer + 3000) {
     if (playerMode == 1) {
       players.set(0, new Ship(width / 2, height / 2, 1));
@@ -383,7 +377,7 @@ void checkPlayerRespawn() {
 }
 
 void spawnAsteroids() {
-  for (int i = 0; i < level + 4; i++) {
+  for (int i = 0; i < level * 2 + 4; i++) {
     float spawnX;
     float spawnY;
     int spawnAxis = int(random(2));

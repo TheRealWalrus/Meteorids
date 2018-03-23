@@ -77,13 +77,13 @@ void endGameScreen() {
   fill(255);
   
   textSize(40);
-  text("GAME OVER", width / 2 - 120, height / 2 - 40);
+  text("GAME OVER", width / 2 - 100, height / 2 - 80);
   
-  textSize(15);
-  text("SCORE: " + score, width / 2 - 80, height / 2 + 10);
+  textSize(20);
+  text("SCORE: " + score, width / 2 - 60, height / 2 - 30);
 
   textSize(15);
-  text("PRESS ANY KEY TO CONTINUE", width / 2 - 120, height / 2 + 120);
+  text("PRESS ENTER TO CONTINUE", width / 2 - 97, height / 2 + 90);
 }
 
 void mainMenu() {
