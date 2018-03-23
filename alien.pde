@@ -103,7 +103,16 @@ class Alien {
 
   void shoot() {
     if (millis() - weaponTimer > 1200) {
-      PVector porjectileVel = PVector.sub(ship.location, location);
+      PVector porjectileVel = new PVector(1000, 1000);
+      for (int i = 0; i < players.size(); i++) {
+        Ship part = players.get(i);
+        PVector target = PVector.sub(part.location, location);
+        if (target.mag() < porjectileVel.mag()) {
+          porjectileVel = target.copy();
+        }
+      }
+
+      //PVector porjectileVel = PVector.sub(ship.location, location);
       porjectileVel.rotate(random(accuracy / -2, accuracy / 2));
       alienProjectiles.add(new AlienProjectile(porjectileVel));
       weaponTimer = millis();

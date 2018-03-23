@@ -1,11 +1,10 @@
 //TO DO:
 
-//1up every at every 10 000 points
-//alien aim
 //sounds !!! partially implemented, further research needed
+//remove cheats
+//Enter to continue
 
 //fullscreen
-
 //decelerating particles
 
 import processing.sound.*;
@@ -23,6 +22,7 @@ int player1RespawnTimer;
 int player2RespawnTimer;
 int endGameTimer;
 int alienCounter;
+int nextOneUp;
 
 Ship ship;
 Hud hud;
@@ -42,7 +42,7 @@ int aliensPerLevel = 5;
 int playerMode = 1;
 
 void setup() {
-  size(853, 480);
+  size(853, 480, P2D);
 
   //playerShootSound = new SoundFile(this, "data/143609__d-w__weapons-synth-blast-03.wav");
 
@@ -61,6 +61,7 @@ void setupGame() {
   player2RespawnTimer = -1;
   endGameTimer = -1;
   alienCounter = 0;
+  nextOneUp = 10000;
 
   hud = new Hud();
   playerProjectiles = new ArrayList();
@@ -88,6 +89,19 @@ void draw() {
     endGameScreen();
   } else {
     mainMenu();
+  }
+}
+
+void oneUp() {
+  if (score >= nextOneUp) {
+    nextOneUp += 10000;
+    if (players.get(0).isAlive == false && player1RespawnTimer == -1) {
+      player1RespawnTimer = millis();
+    } else if (players.get(1).isAlive == false && player2RespawnTimer == -1) {
+      player2RespawnTimer = millis();
+    } else {
+      lives++;
+    }
   }
 }
 
@@ -186,6 +200,7 @@ void runGame() {
       Asteroid target = asteroids.get(j);
       if (bullet.hits(target)) {
         score += target.scoreValue;
+        oneUp();
         if (target.type < 3) {
           asteroids.add(new Asteroid(target.location.x, target.location.y, target.type + 1));
           asteroids.add(new Asteroid(target.location.x, target.location.y, target.type + 1));
@@ -200,6 +215,7 @@ void runGame() {
       if (polyLine(alien.verticesAbs, bullet.location, bullet.lastLoc)) {
         alien.isAlive = false;
         score += alien.scoreValue;
+        oneUp();
         int expType;
         if (alien.isBig) {
           expType = 1;
@@ -221,7 +237,6 @@ void runGame() {
       if (partShip.isAlive && !partShip.invincible) {
         if (polyCircle(partShip.vertices, part.location, part.r)) {
           playerDies(partShip);
-          //ENHANCED LOOP NEEDS TO BE REPLACED??
           part.isFinished = true;
           explosion(part.location, part.type, 255);
           if (part.type < 3) {
@@ -461,10 +476,8 @@ class Partickle {
       pushMatrix();
 
       stroke(pColor);
-      //fill(255, 0, 0);
       translate(location.x, location.y);
       rotate(theta);
-      //ellipse(0, 0, 5, 5);
       line(-lineLength / 2, 0, lineLength / 2, 0);
       popMatrix();
     }
@@ -499,7 +512,6 @@ void spawnAlien() {
     spawnX = width + alien.vertices[2].x;
     spawnY = random(-1 * alien.vertices[3].y, height + alien.vertices[3].y);
   }
-
   alien = new Alien(spawnX, spawnY, randomBool());
 }
 
