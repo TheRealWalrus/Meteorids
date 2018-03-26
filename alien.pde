@@ -103,6 +103,7 @@ class Alien {
 
   void shoot() {
     if (millis() - weaponTimer > 1200) {
+      alienShootSound.play();
       PVector porjectileVel = new PVector(1000, 1000);
       for (int i = 0; i < players.size(); i++) {
         Ship part = players.get(i);

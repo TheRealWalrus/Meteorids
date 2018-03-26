@@ -1,7 +1,6 @@
 //TO DO:
 
-//sounds !!! partially implemented, further testing needed
-
+//overheating sound effect
 //fullscreen
 //decelerating particles
 //exit key
@@ -9,6 +8,11 @@
 import processing.sound.*;
 
 SoundFile playerShootSound;
+SoundFile alienShootSound;
+SoundFile smallExplosionSound;
+SoundFile bigExplosionSound;
+SoundFile blipSound;
+SoundFile selectSound;
 
 boolean isLeft, isRight, isUp, isCtrl, isW, isS, isA, isD, isF;
 
@@ -43,7 +47,15 @@ int playerMode = 1;
 void setup() {
   size(853, 480, P2D);
 
-  //playerShootSound = new SoundFile(this, "data/143609__d-w__weapons-synth-blast-03.wav");
+  playerShootSound = new SoundFile(this, "215438__taira-komori__shoot02.mp3");
+  alienShootSound = new SoundFile(this, "397473__theogobbo__pgj-breach.wav");
+  smallExplosionSound = new SoundFile(this, "270310__littlerobotsoundfactory__explosion-04.wav");
+  bigExplosionSound = new SoundFile(this, "341238__sharesynth__explosion01.wav");
+  blipSound = new SoundFile(this, "344299__musiclegends__blip-select11.wav");
+  selectSound = new SoundFile(this, "43315__altemark__1up.wav");
+  
+  playerShootSound.amp(0.5);
+  blipSound.amp(0.5);
 
   fontMain = loadFont("OCRAExtended-48.vlw");
   textFont(fontMain);
@@ -107,6 +119,7 @@ void oneUp() {
 void playerDies(Ship player) {
   player.isAlive = false;
   explosion(player.location, 4, player.playerColor);
+  bigExplosionSound.play();
   if (lives > 0) {
     if (player.player == 1) {
       player1RespawnTimer = millis();
@@ -174,6 +187,7 @@ void runGame() {
         target.isFinished = true;
         bullet.isFinished = true;
         explosion(target.location, target.type, 255);
+        smallExplosionSound.play();
       }
     }
     //PLAYER IS HIT
@@ -207,6 +221,7 @@ void runGame() {
         target.isFinished = true;
         bullet.isFinished = true;
         explosion(target.location, target.type, 255);
+        smallExplosionSound.play();
       }
     }
     // ALIEN HIT DETECTION
@@ -222,6 +237,7 @@ void runGame() {
           expType = 2;
         }
         explosion(alien.location, expType, 255);
+        smallExplosionSound.play();
       }
     }
   }
@@ -296,12 +312,15 @@ void keyPressed() {
       if (playerMode == 1) {
         playerMode = 2;
         setCursor();
+        blipSound.play();
       } else if (playerMode == 2) {
         playerMode = 1;
         setCursor();
+        blipSound.play();
       }
     }
     if (keyCode == ENTER || keyCode == CONTROL) {
+      selectSound.play();
       setupGame();
     }
   } else {

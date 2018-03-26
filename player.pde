@@ -136,7 +136,7 @@ class Ship {
       playerProjectiles.add(new PlayerProjectile(origo, velocity, vertices[0], playerColor));
       weaponTimer = millis();
       heat += 18;
-      //playerShootSound.play();
+      playerShootSound.play();
     }
 
     heat -= cooldown;
