@@ -75,10 +75,10 @@ class Hud {
 
 void endGameScreen() {
   fill(255);
-  
+
   textSize(40);
   text("GAME OVER", width / 2 - 100, height / 2 - 80);
-  
+
   textSize(20);
   text("SCORE: " + score, width / 2 - 60, height / 2 - 30);
 
@@ -105,6 +105,30 @@ void mainMenu() {
 
   fill(100);
   text("BY FERA", width - 120, height -30);
+
+  //CONTROLS
+  textSize(14);
+  int cLocationX = 30;
+  int cLocationY = height / 2 - 20;
+  int cSpacingX = 100;
+  int cSpacingY = 25;
+
+  text("TURN LEFT", cLocationX, cLocationY + cSpacingY);
+  text("TURN RIGHT", cLocationX, cLocationY + cSpacingY * 2);
+  text("THRUST", cLocationX, cLocationY + cSpacingY * 3);
+  text("FIRE", cLocationX, cLocationY + cSpacingY * 4);
+
+  text("PLAYER 1", cLocationX + cSpacingX, cLocationY);
+  text("LEFT ARROW", cLocationX + cSpacingX, cLocationY + cSpacingY * 1);
+  text("RIGHT ARROW", cLocationX + cSpacingX, cLocationY + cSpacingY * 2);
+  text("UP ARROW", cLocationX + cSpacingX, cLocationY + cSpacingY * 3);
+  text("SPACE", cLocationX + cSpacingX, cLocationY + cSpacingY * 4);
+  
+  text("PLAYER 2", cLocationX + cSpacingX * 2, cLocationY);
+  text("   S", cLocationX + cSpacingX * 2, cLocationY + cSpacingY * 1);
+  text("   F", cLocationX + cSpacingX * 2, cLocationY + cSpacingY * 2);
+  text("   E", cLocationX + cSpacingX * 2, cLocationY + cSpacingY * 3);
+  text("   G", cLocationX + cSpacingX * 2, cLocationY + cSpacingY * 4);
 }
 
 void setupMenu() {

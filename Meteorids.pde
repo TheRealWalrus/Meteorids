@@ -6,9 +6,9 @@
 //decelerating particles
 //exit key
 
-import processing.sound.*;
+//import processing.sound.*;
 
-SoundFile playerShootSound;
+//SoundFile playerShootSound;
 
 boolean isLeft, isRight, isUp, isCtrl, isW, isS, isA, isD, isF;
 
